@@ -1,8 +1,6 @@
-# Basic MCP Server
+# turing-mcp
 
-A minimal Model Context Protocol (MCP) server demonstrating tools, resources, and prompts.
-
-Built with [Smithery SDK](https://smithery.ai/docs)
+An MCP server built with [Smithery CLI](https://smithery.ai/docs/getting_started/quickstart_build_python)
 
 ## Prerequisites
 
@@ -10,33 +8,22 @@ Built with [Smithery SDK](https://smithery.ai/docs)
 
 ## Getting Started
 
-1. Install dependencies:
+1. Run the server:
    ```bash
-   npm install
+   uv run dev
    ```
 
-2. Start development server:
+2. Test interactively:
+
    ```bash
-   npm run dev
+   uv run playground
    ```
 
-Try the `hello` tool, `history://hello-world` resource, or `greet` prompt.
+Try saying "Say hello to John" to test the example tool.
 
 ## Development
 
-Your code is organized as:
-- `src/index.ts` - MCP server with tools, resources, and prompts
-- `smithery.yaml` - Runtime specification
-
-Edit `src/index.ts` to add your own tools, resources, and prompts.
-
-## Build
-
-```bash
-npm run build
-```
-
-Creates bundled server in `.smithery/`
+Your server code is in `src/hello_server/server.py`. Add or update your server capabilities there.
 
 ## Deploy
 
@@ -47,15 +34,9 @@ Ready to deploy? Push your code to GitHub and deploy to Smithery:
 2. Initialize git and push to GitHub:
    ```bash
    git add .
-   git commit -m "Initial commit"
+   git commit -m "Hello world 👋"
    git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
    git push -u origin main
    ```
 
 3. Deploy your server to Smithery at [smithery.ai/new](https://smithery.ai/new)
-
-## Learn More
-
-- [Smithery Docs](https://smithery.ai/docs)
-- [MCP Protocol](https://modelcontextprotocol.io)
-
