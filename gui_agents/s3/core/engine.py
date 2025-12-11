@@ -40,11 +40,25 @@ class LMMEngineOpenAI(LMMEngine):
         backoff.expo, (APIConnectionError, APIError, RateLimitError), max_time=60
     )
     def generate(self, messages, temperature=0.0, max_new_tokens=None, **kwargs):
-        api_key = self.api_key or os.getenv("OPENAI_API_KEY")
-        if api_key is None:
+        api_key = self.api_key if self.api_key else os.getenv("OPENAI_API_KEY")
+
+        # Modal endpoints use OpenAI-compatible API but may not require auth
+        is_modal_endpoint = self.base_url and "modal.run" in self.base_url.lower()
+
+        if not api_key and not is_modal_endpoint:
             raise ValueError(
-                "An API Key needs to be provided in either the api_key parameter or as an environment variable named OPENAI_API_KEY"
+                "❌ OpenAI API key is required but not found!\n"
+                "   Please provide it via:\n"
+                "   1. Command line: --model_api_key YOUR_KEY (or --ground_api_key for grounding)\n"
+                "   2. Environment: export OPENAI_API_KEY=YOUR_KEY\n"
+                "   \n"
+                "   Get your key at: https://platform.openai.com/api-keys"
             )
+
+        # Use a dummy token for Modal endpoints if none provided
+        if is_modal_endpoint and not api_key:
+            api_key = "modal-no-auth-required"
+
         organization = self.organization or os.getenv("OPENAI_ORG_ID")
         if not self.llm_client:
             if not self.base_url:
@@ -377,16 +391,47 @@ class LMMEngineHuggingFace(LMMEngine):
         backoff.expo, (APIConnectionError, APIError, RateLimitError), max_time=60
     )
     def generate(self, messages, temperature=0.0, max_new_tokens=None, **kwargs):
-        api_key = self.api_key or os.getenv("HF_TOKEN")
-        if api_key is None:
+        # Properly handle empty strings and None values for endpoint URL
+        base_url = self.base_url if self.base_url else os.getenv("HF_ENDPOINT_URL")
+        if not base_url:
             raise ValueError(
-                "A HuggingFace token needs to be provided in either the api_key parameter or as an environment variable named HF_TOKEN"
+                "❌ HuggingFace endpoint URL is required but not found!\n"
+                "   Please provide it via:\n"
+                "   1. Command line: --ground_url YOUR_ENDPOINT_URL\n"
+                "   2. Environment: export HF_ENDPOINT_URL=YOUR_ENDPOINT_URL"
             )
-        base_url = self.base_url or os.getenv("HF_ENDPOINT_URL")
-        if base_url is None:
+
+        # Properly handle empty strings and None values for token
+        api_key = self.api_key if self.api_key else os.getenv("HF_TOKEN")
+
+        # Modal endpoints use OpenAI-compatible API but don't require HF tokens
+        is_modal_endpoint = "modal.run" in base_url.lower() if base_url else False
+
+        if not api_key and not is_modal_endpoint:
             raise ValueError(
-                "HuggingFace endpoint must be provided as base_url parameter or as an environment variable named HF_ENDPOINT_URL."
+                "❌ HuggingFace token is required but not found!\n"
+                "   Please provide it via:\n"
+                "   1. Command line: --ground_api_key YOUR_TOKEN\n"
+                "   2. Environment: export HF_TOKEN=YOUR_TOKEN\n"
+                "   \n"
+                "   Get your token at: https://huggingface.co/settings/tokens\n"
+                "   \n"
+                "   💡 NOTE: If using Modal endpoint, use:\n"
+                "      --ground_provider openai (recommended for OpenAI-compatible APIs)"
             )
+
+        # Use a dummy token for Modal endpoints if none provided
+        if is_modal_endpoint and not api_key:
+            api_key = "modal-endpoint-no-auth-required"
+
+        # Modal/OpenAI-compatible endpoints need /v1 prefix for chat completions
+        # The OpenAI client expects base_url to include /v1 when using custom endpoints
+        if is_modal_endpoint and not base_url.endswith("/v1"):
+            base_url = base_url.rstrip("/") + "/v1"
+            import logging
+            logger = logging.getLogger("desktopenv.agent")
+            logger.info(f"📡 Modal endpoint detected, using OpenAI-compatible path: {base_url}")
+
         if not self.llm_client:
             self.llm_client = OpenAI(base_url=base_url, api_key=api_key)
         return (

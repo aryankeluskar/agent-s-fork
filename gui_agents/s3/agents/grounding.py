@@ -195,7 +195,7 @@ class OSWorldACI(ACI):
             platform  # Dictates how the switch_applications agent action works.
         )
 
-        # Configure scaling
+        # Configure scaling - store ACTUAL screen dimensions for coordinate scaling
         self.width = width
         self.height = height
 
@@ -204,6 +204,11 @@ class OSWorldACI(ACI):
 
         # Screenshot used during ACI execution
         self.obs = None
+
+        # Track the actual dimensions of screenshots sent to grounding model
+        # This will be set when assign_screenshot is called
+        self.current_screenshot_width = None
+        self.current_screenshot_height = None
 
         # Configure the visual grounding model responsible for coordinate generation
         self.grounding_model = LMMAgent(engine_params_for_grounding)
@@ -225,8 +230,63 @@ class OSWorldACI(ACI):
         self.current_task_instruction = None
         self.last_code_agent_result = None
 
+    def validate_grounding_model(self, test_screenshot: bytes) -> bool:
+        """
+        Validates that the grounding model is properly configured and accessible.
+
+        Args:
+            test_screenshot: A test screenshot to validate coordinate generation
+
+        Returns:
+            bool: True if grounding model is working, raises exception otherwise
+        """
+        try:
+            import logging
+            logger = logging.getLogger("desktopenv.agent")
+            logger.info("🔍 Validating grounding model connectivity...")
+
+            # Test with a simple coordinate generation request
+            test_obs = {"screenshot": test_screenshot}
+            test_coords = self.generate_coords("center of screen", test_obs)
+
+            if len(test_coords) != 2:
+                raise ValueError(f"Grounding model returned invalid coordinates: {test_coords}")
+
+            logger.info(f"✅ Grounding model validation successful! Test coordinates: {test_coords}")
+            return True
+
+        except Exception as e:
+            error_str = str(e)
+
+            # Provide helpful context based on error type
+            if "modal.run" in str(getattr(self, 'engine_params_for_grounding', {}).get('base_url', '')).lower():
+                endpoint_hint = (
+                    f"   💡 You're using a Modal endpoint. For Modal:\n"
+                    f"      - No HuggingFace token needed (auto-detected)\n"
+                    f"      - Alternative: use --ground_provider openai\n"
+                    f"      - Check Modal endpoint is accessible\n"
+                )
+            else:
+                endpoint_hint = (
+                    f"   Common issues:\n"
+                    f"   1. Missing HuggingFace token (use --ground_api_key or HF_TOKEN env var)\n"
+                    f"   2. Incorrect endpoint URL (check --ground_url)\n"
+                    f"   3. Model endpoint is not accessible or down\n"
+                )
+
+            raise RuntimeError(
+                f"❌ Grounding model validation failed!\n"
+                f"   Error: {error_str}\n"
+                f"   \n"
+                f"{endpoint_hint}"
+                f"   \n"
+                f"   Please fix the issue before running the agent."
+            ) from e
+
     # Given the state and worker's referring expression, use the grounding model to generate (x,y)
     def generate_coords(self, ref_expr: str, obs: Dict) -> List[int]:
+        import logging
+        logger = logging.getLogger("desktopenv.agent")
 
         # Reset the grounding model state
         self.grounding_model.reset()
@@ -239,10 +299,15 @@ class OSWorldACI(ACI):
 
         # Generate and parse coordinates
         response = call_llm_safe(self.grounding_model)
+        logger.info(f"🎯 Grounding model response: {response}")
         print("RAW GROUNDING MODEL RESPONSE:", response)
         numericals = re.findall(r"\d+", response)
-        assert len(numericals) >= 2
-        return [int(numericals[0]), int(numericals[1])]
+        assert len(numericals) >= 2, f"Expected at least 2 coordinates, got: {numericals} from response: {response}"
+
+        coords = [int(numericals[0]), int(numericals[1])]
+        logger.info(f"📍 Parsed coordinates: {coords}")
+
+        return coords
 
     # Calls pytesseract to generate word level bounding boxes for text grounding
     def get_ocr_elements(self, b64_image_data: str) -> Tuple[str, List]:
@@ -328,19 +393,69 @@ class OSWorldACI(ACI):
     def assign_screenshot(self, obs: Dict):
         self.obs = obs
 
+        # Extract the actual dimensions of the screenshot being sent to the grounding model
+        # This is critical for accurate coordinate scaling
+        if "screenshot" in obs and obs["screenshot"]:
+            from PIL import Image
+            from io import BytesIO
+
+            image_bytes = obs["screenshot"]
+            image = Image.open(BytesIO(image_bytes))
+            self.current_screenshot_width = image.width
+            self.current_screenshot_height = image.height
+
+            import logging
+            logger = logging.getLogger("desktopenv.agent")
+            logger.debug(
+                f"📸 Screenshot dimensions: {self.current_screenshot_width}x{self.current_screenshot_height}"
+            )
+
     def set_task_instruction(self, task_instruction: str):
         """Set the current task instruction for the code agent."""
         self.current_task_instruction = task_instruction
 
-    # Resize from grounding model dim into OSWorld dim (1920 * 1080)
+    # Resize from grounding model coordinate space to actual screen coordinate space
     def resize_coordinates(self, coordinates: List[int]) -> List[int]:
-        grounding_width = self.engine_params_for_grounding["grounding_width"]
-        grounding_height = self.engine_params_for_grounding["grounding_height"]
+        """
+        Transform coordinates from grounding model space to actual screen space.
 
-        return [
-            round(coordinates[0] * self.width / grounding_width),
-            round(coordinates[1] * self.height / grounding_height),
-        ]
+        The grounding model returns coordinates in the space of the image it receives.
+        We need to scale these to the actual screen dimensions.
+
+        Args:
+            coordinates: [x, y] in grounding model image space
+
+        Returns:
+            [x, y] in actual screen space
+        """
+        import logging
+        logger = logging.getLogger("desktopenv.agent")
+
+        # Use actual screenshot dimensions if available, otherwise fall back to user-specified dimensions
+        if self.current_screenshot_width and self.current_screenshot_height:
+            # The grounding model returns coordinates in the space of the actual image it received
+            # So we scale from screenshot dimensions to screen dimensions
+            grounding_width = self.current_screenshot_width
+            grounding_height = self.current_screenshot_height
+        else:
+            # Fallback to user-specified dimensions (old behavior)
+            grounding_width = self.engine_params_for_grounding.get("grounding_width", 1920)
+            grounding_height = self.engine_params_for_grounding.get("grounding_height", 1080)
+            logger.warning(
+                f"⚠️  Screenshot dimensions not available, falling back to user-specified "
+                f"{grounding_width}x{grounding_height}. This may cause inaccurate clicking!"
+            )
+
+        scaled_x = round(coordinates[0] * self.width / grounding_width)
+        scaled_y = round(coordinates[1] * self.height / grounding_height)
+
+        logger.debug(
+            f"🎯 Coordinate scaling: ({coordinates[0]}, {coordinates[1]}) "
+            f"from {grounding_width}x{grounding_height} → ({scaled_x}, {scaled_y}) "
+            f"for screen {self.width}x{self.height}"
+        )
+
+        return [scaled_x, scaled_y]
 
     @agent_action
     def click(
@@ -357,8 +472,14 @@ class OSWorldACI(ACI):
             button_type:str, which mouse button to press can be "left", "middle", or "right"
             hold_keys:List, list of keys to hold while clicking
         """
+        import logging
+        logger = logging.getLogger("desktopenv.agent")
+
         coords1 = self.generate_coords(element_description, self.obs)
         x, y = self.resize_coordinates(coords1)
+
+        logger.info(f"🖱️  Click coordinates: {coords1} → ({x}, {y})")
+
         command = "import pyautogui; "
 
         # TODO: specified duration?

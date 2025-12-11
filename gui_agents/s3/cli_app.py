@@ -236,19 +236,19 @@ def main():
     parser.add_argument(
         "--model",
         type=str,
-        default="gpt-5-2025-08-07",
-        help="Specify the model to use (e.g., gpt-5-2025-08-07)",
+        default="gpt-5.2-2025-12-11",
+        help="Specify the model to use (e.g., gpt-5.2-2025-12-11)",
     )
     parser.add_argument(
         "--model_url",
         type=str,
-        default="",
+        default=None,
         help="The URL of the main generation model API.",
     )
     parser.add_argument(
         "--model_api_key",
         type=str,
-        default="",
+        default=None,
         help="The API key of the main generation model.",
     )
     parser.add_argument(
@@ -274,7 +274,7 @@ def main():
     parser.add_argument(
         "--ground_api_key",
         type=str,
-        default="",
+        default=None,
         help="The API key of the grounding model.",
     )
     parser.add_argument(
@@ -359,6 +359,32 @@ def main():
         width=screen_width,
         height=screen_height,
     )
+
+    # Validate grounding model connectivity before starting
+    print("\n🔧 Initializing Agent-S...")
+    print(f"📐 Screen size: {screen_width}x{screen_height}")
+    print(f"📸 Screenshot size: {scaled_width}x{scaled_height}")
+    print(f"🎯 Grounding model config: {args.grounding_width}x{args.grounding_height}")
+
+    if scaled_width != screen_width or scaled_height != screen_height:
+        print(f"⚠️  Screenshots will be scaled down from screen size")
+
+    print("📡 Testing grounding model connectivity...")
+    try:
+        # Take a test screenshot for validation
+        test_screenshot = pyautogui.screenshot()
+        test_screenshot = test_screenshot.resize((scaled_width, scaled_height), Image.LANCZOS)
+        buffered = io.BytesIO()
+        test_screenshot.save(buffered, format="PNG")
+        test_screenshot_bytes = buffered.getvalue()
+
+        # Validate the grounding model
+        grounding_agent.validate_grounding_model(test_screenshot_bytes)
+        print("✅ Grounding model ready!")
+        print(f"💡 Coordinates will be scaled from {scaled_width}x{scaled_height} → {screen_width}x{screen_height}\n")
+    except Exception as e:
+        print(f"\n{str(e)}\n")
+        sys.exit(1)
 
     agent = AgentS3(
         engine_params,

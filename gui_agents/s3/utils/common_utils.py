@@ -35,10 +35,12 @@ def create_pyautogui_code(agent, code: str, obs: Dict) -> str:
 def call_llm_safe(
     agent, temperature: float = 0.0, use_thinking: bool = False, **kwargs
 ) -> str:
-    # Retry if fails
+    # Retry if fails, but fail fast on configuration errors
     max_retries = 3  # Set the maximum number of retries
     attempt = 0
     response = ""
+    last_exception = None
+
     while attempt < max_retries:
         try:
             response = agent.get_response(
@@ -47,12 +49,30 @@ def call_llm_safe(
             assert response is not None, "Response from agent should not be None"
             print("Response success!")
             break  # If successful, break out of the loop
-        except Exception as e:
+        except (ValueError, RuntimeError) as e:
+            # Configuration errors (missing tokens, bad URLs) - don't retry
+            error_msg = str(e).lower()
+            if any(keyword in error_msg for keyword in ["token", "api_key", "endpoint", "url", "huggingface"]):
+                logger.error(f"Configuration error detected: {e}")
+                raise  # Immediately raise configuration errors
+            # Other ValueErrors/RuntimeErrors - retry
             attempt += 1
+            last_exception = e
             print(f"Attempt {attempt} failed: {e}")
-            if attempt == max_retries:
-                print("Max retries reached. Handling failure.")
-        time.sleep(1.0)
+            if attempt < max_retries:
+                time.sleep(1.0)
+        except Exception as e:
+            # Network/transient errors - retry with backoff
+            attempt += 1
+            last_exception = e
+            print(f"Attempt {attempt} failed: {e}")
+            if attempt < max_retries:
+                time.sleep(1.0)
+
+    if attempt == max_retries and last_exception:
+        print("Max retries reached. Handling failure.")
+        logger.warning(f"LLM call failed after {max_retries} attempts. Last error: {last_exception}")
+
     return response if response is not None else ""
 
 

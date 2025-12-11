@@ -327,9 +327,29 @@ class Worker(BaseModule):
         try:
             assert plan_code, "Plan code should not be empty"
             exec_code = create_pyautogui_code(self.grounding_agent, plan_code, obs)
+        except (ValueError, RuntimeError) as e:
+            # Configuration errors - these should have been caught during validation
+            error_msg = str(e).lower()
+            if any(keyword in error_msg for keyword in ["token", "api_key", "endpoint", "url"]):
+                logger.error(
+                    f"❌ Configuration error during action execution!\n"
+                    f"   Plan code: {plan_code}\n"
+                    f"   Error: {e}\n"
+                    f"   This should have been caught during startup validation."
+                )
+                raise  # Re-raise to stop execution
+            # Other errors - log and skip turn
+            logger.error(
+                f"Could not evaluate the following plan code:\n{plan_code}\n"
+                f"Error type: {type(e).__name__}\n"
+                f"Error: {e}"
+            )
+            exec_code = self.grounding_agent.wait(1.333)
         except Exception as e:
             logger.error(
-                f"Could not evaluate the following plan code:\n{plan_code}\nError: {e}"
+                f"Could not evaluate the following plan code:\n{plan_code}\n"
+                f"Error type: {type(e).__name__}\n"
+                f"Error: {e}"
             )
             exec_code = self.grounding_agent.wait(
                 1.333
