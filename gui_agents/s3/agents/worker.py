@@ -158,16 +158,19 @@ class Worker(BaseModule):
                 )
             # Load the latest action
             else:
+                from gui_agents.s3.utils.profiler import profiler
+
                 self.reflection_agent.add_message(
                     text_content=self.worker_history[-1],
                     image_content=obs["screenshot"],
                     role="user",
                 )
-                full_reflection = call_llm_safe(
-                    self.reflection_agent,
-                    temperature=self.temperature,
-                    use_thinking=self.use_thinking,
-                )
+                with profiler.profile("API_Call_Reflection_LLM"):
+                    full_reflection = call_llm_safe(
+                        self.reflection_agent,
+                        temperature=self.temperature,
+                        use_thinking=self.use_thinking,
+                    )
                 reflection, reflection_thoughts = split_thinking_response(
                     full_reflection
                 )
@@ -180,6 +183,7 @@ class Worker(BaseModule):
         """
         Predict the next action(s) based on the current observation.
         """
+        from gui_agents.s3.utils.profiler import profiler
 
         self.grounding_agent.assign_screenshot(obs)
         self.grounding_agent.set_task_instruction(instruction)
@@ -198,7 +202,8 @@ class Worker(BaseModule):
             self.generator_agent.add_system_prompt(prompt_with_instructions)
 
         # Get the per-step reflection
-        reflection, reflection_thoughts = self._generate_reflection(instruction, obs)
+        with profiler.profile("Reflection_Phase"):
+            reflection, reflection_thoughts = self._generate_reflection(instruction, obs)
         if reflection:
             generator_message += f"REFLECTION: You may use this reflection on the previous action and overall trajectory:\n{reflection}\n"
 
@@ -312,48 +317,50 @@ class Worker(BaseModule):
             SINGLE_ACTION_FORMATTER,
             partial(CODE_VALID_FORMATTER, self.grounding_agent, obs),
         ]
-        plan = call_llm_formatted(
-            self.generator_agent,
-            format_checkers,
-            temperature=self.temperature,
-            use_thinking=self.use_thinking,
-        )
+        with profiler.profile("Planning_Phase"):
+            plan = call_llm_formatted(
+                self.generator_agent,
+                format_checkers,
+                temperature=self.temperature,
+                use_thinking=self.use_thinking,
+            )
         self.worker_history.append(plan)
         self.generator_agent.add_message(plan, role="assistant")
         logger.info("PLAN:\n %s", plan)
 
         # Extract the next action from the plan
         plan_code = parse_code_from_string(plan)
-        try:
-            assert plan_code, "Plan code should not be empty"
-            exec_code = create_pyautogui_code(self.grounding_agent, plan_code, obs)
-        except (ValueError, RuntimeError) as e:
-            # Configuration errors - these should have been caught during validation
-            error_msg = str(e).lower()
-            if any(keyword in error_msg for keyword in ["token", "api_key", "endpoint", "url"]):
+        with profiler.profile("Grounding_Phase"):
+            try:
+                assert plan_code, "Plan code should not be empty"
+                exec_code = create_pyautogui_code(self.grounding_agent, plan_code, obs)
+            except (ValueError, RuntimeError) as e:
+                # Configuration errors - these should have been caught during validation
+                error_msg = str(e).lower()
+                if any(keyword in error_msg for keyword in ["token", "api_key", "endpoint", "url"]):
+                    logger.error(
+                        f"❌ Configuration error during action execution!\n"
+                        f"   Plan code: {plan_code}\n"
+                        f"   Error: {e}\n"
+                        f"   This should have been caught during startup validation."
+                    )
+                    raise  # Re-raise to stop execution
+                # Other errors - log and skip turn
                 logger.error(
-                    f"❌ Configuration error during action execution!\n"
-                    f"   Plan code: {plan_code}\n"
-                    f"   Error: {e}\n"
-                    f"   This should have been caught during startup validation."
+                    f"Could not evaluate the following plan code:\n{plan_code}\n"
+                    f"Error type: {type(e).__name__}\n"
+                    f"Error: {e}"
                 )
-                raise  # Re-raise to stop execution
-            # Other errors - log and skip turn
-            logger.error(
-                f"Could not evaluate the following plan code:\n{plan_code}\n"
-                f"Error type: {type(e).__name__}\n"
-                f"Error: {e}"
-            )
-            exec_code = self.grounding_agent.wait(1.333)
-        except Exception as e:
-            logger.error(
-                f"Could not evaluate the following plan code:\n{plan_code}\n"
-                f"Error type: {type(e).__name__}\n"
-                f"Error: {e}"
-            )
-            exec_code = self.grounding_agent.wait(
-                1.333
-            )  # Skip a turn if the code cannot be evaluated
+                exec_code = self.grounding_agent.wait(1.333)
+            except Exception as e:
+                logger.error(
+                    f"Could not evaluate the following plan code:\n{plan_code}\n"
+                    f"Error type: {type(e).__name__}\n"
+                    f"Error: {e}"
+                )
+                exec_code = self.grounding_agent.wait(
+                    1.333
+                )  # Skip a turn if the code cannot be evaluated
 
         executor_info = {
             "plan": plan,

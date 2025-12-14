@@ -153,76 +153,92 @@ def scale_screen_dimensions(width: int, height: int, max_dim_size: int):
 
 
 def run_agent(agent, instruction: str, scaled_width: int, scaled_height: int):
+    from gui_agents.s3.utils.profiler import profiler
+
     global paused
     obs = {}
     traj = "Task:\n" + instruction
     subtask_traj = ""
+
+    # Reset profiler for new task
+    profiler.reset()
+
     for step in range(15):
-        # Check if we're in paused state and wait
-        while paused:
-            time.sleep(0.1)
-        # Get screen shot using pyautogui
-        screenshot = pyautogui.screenshot()
-        screenshot = screenshot.resize((scaled_width, scaled_height), Image.LANCZOS)
-
-        # Save the screenshot to a BytesIO object
-        buffered = io.BytesIO()
-        screenshot.save(buffered, format="PNG")
-
-        # Get the byte value of the screenshot
-        screenshot_bytes = buffered.getvalue()
-        # Convert to base64 string.
-        obs["screenshot"] = screenshot_bytes
-
-        # Check again for pause state before prediction
-        while paused:
-            time.sleep(0.1)
-
-        print(f"\n🔄 Step {step + 1}/15: Getting next action from agent...")
-
-        # Get next action code from the agent
-        info, code = agent.predict(instruction=instruction, observation=obs)
-
-        if "done" in code[0].lower() or "fail" in code[0].lower():
-            if platform.system() == "Darwin":
-                os.system(
-                    f'osascript -e \'display dialog "Task Completed" with title "OpenACI Agent" buttons "OK" default button "OK"\''
-                )
-            elif platform.system() == "Linux":
-                os.system(
-                    f'zenity --info --title="OpenACI Agent" --text="Task Completed" --width=200 --height=100'
-                )
-
-            break
-
-        if "next" in code[0].lower():
-            continue
-
-        if "wait" in code[0].lower():
-            print("⏳ Agent requested wait...")
-            time.sleep(5)
-            continue
-
-        else:
-            time.sleep(1.0)
-            print("EXECUTING CODE:", code[0])
-
-            # Check for pause state before execution
+        with profiler.profile(f"Step_{step+1}"):
+            # Check if we're in paused state and wait
             while paused:
                 time.sleep(0.1)
 
-            # Ask for permission before executing
-            exec(code[0])
-            time.sleep(1.0)
+            # Get screen shot using pyautogui
+            with profiler.profile("Screenshot_Capture"):
+                screenshot = pyautogui.screenshot()
+                screenshot = screenshot.resize((scaled_width, scaled_height), Image.LANCZOS)
 
-            # Update task and subtask trajectories
-            if "reflection" in info and "executor_plan" in info:
-                traj += (
-                    "\n\nReflection:\n"
-                    + str(info["reflection"])
-                    + "\n\n----------------------\n\nPlan:\n"
-                    + info["executor_plan"]
-                )
+                # Save the screenshot to a BytesIO object
+                buffered = io.BytesIO()
+                screenshot.save(buffered, format="PNG")
+
+                # Get the byte value of the screenshot
+                screenshot_bytes = buffered.getvalue()
+                # Convert to base64 string.
+                obs["screenshot"] = screenshot_bytes
+
+            # Check again for pause state before prediction
+            while paused:
+                time.sleep(0.1)
+
+            print(f"\n🔄 Step {step + 1}/15: Getting next action from agent...")
+
+            # Get next action code from the agent
+            with profiler.profile("Agent_Prediction"):
+                info, code = agent.predict(instruction=instruction, observation=obs)
+
+            if "done" in code[0].lower() or "fail" in code[0].lower():
+                if platform.system() == "Darwin":
+                    os.system(
+                        f'osascript -e \'display dialog "Task Completed" with title "OpenACI Agent" buttons "OK" default button "OK"\''
+                    )
+                elif platform.system() == "Linux":
+                    os.system(
+                        f'zenity --info --title="OpenACI Agent" --text="Task Completed" --width=200 --height=100'
+                    )
+
+                break
+
+            if "next" in code[0].lower():
+                continue
+
+            if "wait" in code[0].lower():
+                print("⏳ Agent requested wait...")
+                time.sleep(5)
+                continue
+
+            else:
+                time.sleep(1.0)
+                print("EXECUTING CODE:", code[0])
+
+                # Check for pause state before execution
+                while paused:
+                    time.sleep(0.1)
+
+                # Ask for permission before executing
+                with profiler.profile("Code_Execution"):
+                    exec(code[0])
+                time.sleep(1.0)
+
+                # Update task and subtask trajectories
+                if "reflection" in info and "executor_plan" in info:
+                    traj += (
+                        "\n\nReflection:\n"
+                        + str(info["reflection"])
+                        + "\n\n----------------------\n\nPlan:\n"
+                        + info["executor_plan"]
+                    )
+
+    # Generate and display profiling summary
+    summary = profiler.generate_summary()
+    logger.info(summary)
+    print(summary)
 
 
 def main():

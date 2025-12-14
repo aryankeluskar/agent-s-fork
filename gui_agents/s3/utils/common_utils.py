@@ -35,6 +35,15 @@ def create_pyautogui_code(agent, code: str, obs: Dict) -> str:
 def call_llm_safe(
     agent, temperature: float = 0.0, use_thinking: bool = False, **kwargs
 ) -> str:
+    from gui_agents.s3.utils.profiler import profiler
+
+    # Start timing OUTSIDE retry loop to capture total time including retries
+    model_name = getattr(agent.engine, 'model', 'unknown')
+    timing_key = profiler.start_timing("LLM_Call_with_Retries", metadata={
+        "model": model_name,
+        "temperature": temperature
+    })
+
     # Retry if fails, but fail fast on configuration errors
     max_retries = 3  # Set the maximum number of retries
     attempt = 0
@@ -43,9 +52,10 @@ def call_llm_safe(
 
     while attempt < max_retries:
         try:
-            response = agent.get_response(
-                temperature=temperature, use_thinking=use_thinking, **kwargs
-            )
+            with profiler.profile(f"LLM_Attempt_{attempt+1}"):
+                response = agent.get_response(
+                    temperature=temperature, use_thinking=use_thinking, **kwargs
+                )
             assert response is not None, "Response from agent should not be None"
             print("Response success!")
             break  # If successful, break out of the loop
@@ -73,6 +83,14 @@ def call_llm_safe(
         print("Max retries reached. Handling failure.")
         logger.warning(f"LLM call failed after {max_retries} attempts. Last error: {last_exception}")
 
+    # Add retry metadata and end timing
+    profiler.add_metadata(timing_key, {
+        "attempts": attempt + (1 if response else 0),
+        "success": bool(response),
+        "retries": attempt if response else attempt - 1
+    })
+    profiler.end_timing(timing_key)
+
     return response if response is not None else ""
 
 
@@ -89,62 +107,65 @@ def call_llm_formatted(generator, format_checkers, **kwargs):
     Returns:
         response (str): The formatted response from the generator agent.
     """
-    max_retries = 3  # Set the maximum number of retries
-    attempt = 0
-    response = ""
-    if kwargs.get("messages") is None:
-        messages = (
-            generator.messages.copy()
-        )  # Copy messages to avoid modifying the original
-    else:
-        messages = kwargs["messages"]
-        del kwargs["messages"]  # Remove messages from kwargs to avoid passing it twice
-    while attempt < max_retries:
-        response = call_llm_safe(generator, messages=messages, **kwargs)
+    from gui_agents.s3.utils.profiler import profiler
 
-        # Prepare feedback messages for incorrect formatting
-        feedback_msgs = []
-        for format_checker in format_checkers:
-            success, feedback = format_checker(response)
-            if not success:
-                feedback_msgs.append(feedback)
-        if not feedback_msgs:
-            # logger.info(f"Response formatted correctly on attempt {attempt} for {generator.engine.model}")
-            break
-        logger.error(
-            f"Response formatting error on attempt {attempt} for {generator.engine.model}. Response: {response} {', '.join(feedback_msgs)}"
-        )
-        messages.append(
-            {
-                "role": "assistant",
-                "content": [{"type": "text", "text": response}],
-            }
-        )
-        logger.info(f"Bad response: {response}")
-        delimiter = "\n- "
-        formatting_feedback = f"- {delimiter.join(feedback_msgs)}"
-        messages.append(
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": PROCEDURAL_MEMORY.FORMATTING_FEEDBACK_PROMPT.replace(
-                            "FORMATTING_FEEDBACK", formatting_feedback
-                        ),
-                    }
-                ],
-            }
-        )
-        logger.info("Feedback:\n%s", formatting_feedback)
+    with profiler.profile("LLM_Call_Formatted"):
+        max_retries = 3  # Set the maximum number of retries
+        attempt = 0
+        response = ""
+        if kwargs.get("messages") is None:
+            messages = (
+                generator.messages.copy()
+            )  # Copy messages to avoid modifying the original
+        else:
+            messages = kwargs["messages"]
+            del kwargs["messages"]  # Remove messages from kwargs to avoid passing it twice
+        while attempt < max_retries:
+            response = call_llm_safe(generator, messages=messages, **kwargs)
 
-        attempt += 1
-        if attempt == max_retries:
+            # Prepare feedback messages for incorrect formatting
+            feedback_msgs = []
+            for format_checker in format_checkers:
+                success, feedback = format_checker(response)
+                if not success:
+                    feedback_msgs.append(feedback)
+            if not feedback_msgs:
+                # logger.info(f"Response formatted correctly on attempt {attempt} for {generator.engine.model}")
+                break
             logger.error(
-                "Max retries reached when formatting response. Handling failure."
+                f"Response formatting error on attempt {attempt} for {generator.engine.model}. Response: {response} {', '.join(feedback_msgs)}"
             )
-        time.sleep(1.0)
-    return response
+            messages.append(
+                {
+                    "role": "assistant",
+                    "content": [{"type": "text", "text": response}],
+                }
+            )
+            logger.info(f"Bad response: {response}")
+            delimiter = "\n- "
+            formatting_feedback = f"- {delimiter.join(feedback_msgs)}"
+            messages.append(
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": PROCEDURAL_MEMORY.FORMATTING_FEEDBACK_PROMPT.replace(
+                                "FORMATTING_FEEDBACK", formatting_feedback
+                            ),
+                        }
+                    ],
+                }
+            )
+            logger.info("Feedback:\n%s", formatting_feedback)
+
+            attempt += 1
+            if attempt == max_retries:
+                logger.error(
+                    "Max retries reached when formatting response. Handling failure."
+                )
+            time.sleep(1.0)
+        return response
 
 
 def split_thinking_response(full_response: str) -> Tuple[str, str]:

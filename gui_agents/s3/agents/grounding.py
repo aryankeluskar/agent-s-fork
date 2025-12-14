@@ -285,34 +285,40 @@ class OSWorldACI(ACI):
 
     # Given the state and worker's referring expression, use the grounding model to generate (x,y)
     def generate_coords(self, ref_expr: str, obs: Dict) -> List[int]:
+        from gui_agents.s3.utils.profiler import profiler
         import logging
         logger = logging.getLogger("desktopenv.agent")
 
-        # Reset the grounding model state
-        self.grounding_model.reset()
+        with profiler.profile("Grounding_generate_coords", metadata={"element": ref_expr}):
+            # Reset the grounding model state
+            self.grounding_model.reset()
 
-        # Configure the context, UI-TARS demo does not use system prompt
-        prompt = f"Query:{ref_expr}\nOutput only the coordinate of one point in your response.\n"
-        self.grounding_model.add_message(
-            text_content=prompt, image_content=obs["screenshot"], put_text_last=True
-        )
+            # Configure the context, UI-TARS demo does not use system prompt
+            prompt = f"Query:{ref_expr}\nOutput only the coordinate of one point in your response.\n"
+            self.grounding_model.add_message(
+                text_content=prompt, image_content=obs["screenshot"], put_text_last=True
+            )
 
-        # Generate and parse coordinates
-        response = call_llm_safe(self.grounding_model)
-        logger.info(f"🎯 Grounding model response: {response}")
-        print("RAW GROUNDING MODEL RESPONSE:", response)
-        numericals = re.findall(r"\d+", response)
-        assert len(numericals) >= 2, f"Expected at least 2 coordinates, got: {numericals} from response: {response}"
+            # Generate and parse coordinates
+            with profiler.profile("API_Call_Grounding_Model", metadata={"element": ref_expr}):
+                response = call_llm_safe(self.grounding_model)
+            logger.info(f"🎯 Grounding model response: {response}")
+            print("RAW GROUNDING MODEL RESPONSE:", response)
+            numericals = re.findall(r"\d+", response)
+            assert len(numericals) >= 2, f"Expected at least 2 coordinates, got: {numericals} from response: {response}"
 
-        coords = [int(numericals[0]), int(numericals[1])]
-        logger.info(f"📍 Parsed coordinates: {coords}")
+            coords = [int(numericals[0]), int(numericals[1])]
+            logger.info(f"📍 Parsed coordinates: {coords}")
 
-        return coords
+            return coords
 
     # Calls pytesseract to generate word level bounding boxes for text grounding
     def get_ocr_elements(self, b64_image_data: str) -> Tuple[str, List]:
-        image = Image.open(BytesIO(b64_image_data))
-        image_data = pytesseract.image_to_data(image, output_type=Output.DICT)
+        from gui_agents.s3.utils.profiler import profiler
+
+        with profiler.profile("OCR_Text_Extraction"):
+            image = Image.open(BytesIO(b64_image_data))
+            image_data = pytesseract.image_to_data(image, output_type=Output.DICT)
 
         # Clean text by removing leading and trailing spaces and non-alphabetical characters, but keeping punctuation
         for i, word in enumerate(image_data["text"]):
@@ -350,45 +356,49 @@ class OSWorldACI(ACI):
     def generate_text_coords(
         self, phrase: str, obs: Dict, alignment: str = ""
     ) -> List[int]:
+        from gui_agents.s3.utils.profiler import profiler
 
-        ocr_table, ocr_elements = self.get_ocr_elements(obs["screenshot"])
+        with profiler.profile("Grounding_generate_text_coords", metadata={"phrase": phrase}):
+            ocr_table, ocr_elements = self.get_ocr_elements(obs["screenshot"])
 
-        alignment_prompt = ""
-        if alignment == "start":
-            alignment_prompt = "**Important**: Output the word id of the FIRST word in the provided phrase.\n"
-        elif alignment == "end":
-            alignment_prompt = "**Important**: Output the word id of the LAST word in the provided phrase.\n"
+            alignment_prompt = ""
+            if alignment == "start":
+                alignment_prompt = "**Important**: Output the word id of the FIRST word in the provided phrase.\n"
+            elif alignment == "end":
+                alignment_prompt = "**Important**: Output the word id of the LAST word in the provided phrase.\n"
 
-        # Load LLM prompt
-        self.text_span_agent.reset()
-        self.text_span_agent.add_message(
-            alignment_prompt + "Phrase: " + phrase + "\n" + ocr_table, role="user"
-        )
-        self.text_span_agent.add_message(
-            "Screenshot:\n", image_content=obs["screenshot"], role="user"
-        )
+            # Load LLM prompt
+            self.text_span_agent.reset()
+            self.text_span_agent.add_message(
+                alignment_prompt + "Phrase: " + phrase + "\n" + ocr_table, role="user"
+            )
+            self.text_span_agent.add_message(
+                "Screenshot:\n", image_content=obs["screenshot"], role="user"
+            )
 
-        # Obtain the target element
-        response = call_llm_safe(self.text_span_agent)
-        print("TEXT SPAN AGENT RESPONSE:", response)
-        numericals = re.findall(r"\d+", response)
-        if len(numericals) > 0:
-            text_id = int(numericals[-1])
-        else:
-            text_id = 0
-        elem = ocr_elements[text_id]
+            # Obtain the target element
+            with profiler.profile("API_Call_Text_Span_Agent"):
+                response = call_llm_safe(self.text_span_agent)
+            print("TEXT SPAN AGENT RESPONSE:", response)
+            numericals = re.findall(r"\d+", response)
+            if len(numericals) > 0:
+                text_id = int(numericals[-1])
+            else:
+                text_id = 0
+            elem = ocr_elements[text_id]
 
-        # Compute the element coordinates
-        if alignment == "start":
-            coords = [elem["left"], elem["top"] + (elem["height"] // 2)]
-        elif alignment == "end":
-            coords = [elem["left"] + elem["width"], elem["top"] + (elem["height"] // 2)]
-        else:
-            coords = [
-                elem["left"] + (elem["width"] // 2),
-                elem["top"] + (elem["height"] // 2),
-            ]
-        return coords
+            # Compute the element coordinates
+            if alignment == "start":
+                coords = [elem["left"], elem["top"] + (elem["height"] // 2)]
+            elif alignment == "end":
+                coords = [elem["left"] + elem["width"], elem["top"] + (elem["height"] // 2)]
+            else:
+                coords = [
+                    elem["left"] + (elem["width"] // 2),
+                    elem["top"] + (elem["height"] // 2),
+                ]
+
+            return coords
 
     def assign_screenshot(self, obs: Dict):
         self.obs = obs
@@ -472,24 +482,30 @@ class OSWorldACI(ACI):
             button_type:str, which mouse button to press can be "left", "middle", or "right"
             hold_keys:List, list of keys to hold while clicking
         """
+        from gui_agents.s3.utils.profiler import profiler
         import logging
         logger = logging.getLogger("desktopenv.agent")
 
-        coords1 = self.generate_coords(element_description, self.obs)
-        x, y = self.resize_coordinates(coords1)
+        with profiler.profile("Action_Click", metadata={"element": element_description}):
+            with profiler.profile("Click_Grounding"):
+                coords1 = self.generate_coords(element_description, self.obs)
+                x, y = self.resize_coordinates(coords1)
 
-        logger.info(f"🖱️  Click coordinates: {coords1} → ({x}, {y})")
+            logger.info(f"🖱️  Click coordinates: {coords1} → ({x}, {y})")
 
-        command = "import pyautogui; "
+            command = "import pyautogui; "
 
-        # TODO: specified duration?
-        for k in hold_keys:
-            command += f"pyautogui.keyDown({repr(k)}); "
-        command += f"""import pyautogui; pyautogui.click({x}, {y}, clicks={num_clicks}, button={repr(button_type)}); """
-        for k in hold_keys:
-            command += f"pyautogui.keyUp({repr(k)}); "
-        # Return pyautoguicode to click on the element
-        return command
+            # Normalize keys for the current platform
+            normalized_hold_keys = [self._normalize_key_for_platform(key) for key in hold_keys]
+
+            # TODO: specified duration?
+            for k in normalized_hold_keys:
+                command += f"pyautogui.keyDown({repr(k)}); "
+            command += f"""import pyautogui; pyautogui.click({x}, {y}, clicks={num_clicks}, button={repr(button_type)}); """
+            for k in normalized_hold_keys:
+                command += f"pyautogui.keyUp({repr(k)}); "
+            # Return pyautoguicode to click on the element
+            return command
 
     @agent_action
     def switch_applications(self, app_code):
@@ -545,42 +561,46 @@ class OSWorldACI(ACI):
             overwrite:bool, Assign it to True if the text should overwrite the existing text, otherwise assign it to False. Using this argument clears all text in an element.
             enter:bool, Assign it to True if the enter key should be pressed after typing the text, otherwise assign it to False.
         """
-        command = "import pyautogui; "
-        command += (
-            "\ntry:\n"
-            "    import pyperclip\n"
-            "except ImportError:\n"
-            "    import subprocess\n"
-            "    subprocess.run('echo \"osworld-public-evaluation\" | sudo -S apt-get install -y xclip xsel', shell=True, check=True)\n"
-            "    subprocess.check_call([subprocess.sys.executable, '-m', 'pip', 'install', 'pyperclip'])\n"
-            "    import pyperclip\n\n"
-        )
+        from gui_agents.s3.utils.profiler import profiler
 
-        if element_description is not None:
-            coords1 = self.generate_coords(element_description, self.obs)
-            x, y = self.resize_coordinates(coords1)
-            command += f"pyautogui.click({x}, {y}); "
-
-        if overwrite:
+        with profiler.profile("Action_Type", metadata={"text_length": len(text)}):
+            command = "import pyautogui; "
             command += (
-                f"pyautogui.hotkey({repr('command' if self.platform == 'darwin' else 'ctrl')}, 'a'); "
-                "pyautogui.press('backspace'); "
+                "\ntry:\n"
+                "    import pyperclip\n"
+                "except ImportError:\n"
+                "    import subprocess\n"
+                "    subprocess.run('echo \"osworld-public-evaluation\" | sudo -S apt-get install -y xclip xsel', shell=True, check=True)\n"
+                "    subprocess.check_call([subprocess.sys.executable, '-m', 'pip', 'install', 'pyperclip'])\n"
+                "    import pyperclip\n\n"
             )
 
-        # Check if text contains Unicode characters that pyautogui.write() can't handle
-        has_unicode = any(ord(char) > 127 for char in text)
+            if element_description is not None:
+                with profiler.profile("Type_Grounding"):
+                    coords1 = self.generate_coords(element_description, self.obs)
+                    x, y = self.resize_coordinates(coords1)
+                command += f"pyautogui.click({x}, {y}); "
 
-        if has_unicode:
-            # Use clipboard method for Unicode characters
-            command += f"pyperclip.copy({repr(text)}); "
-            command += f"pyautogui.hotkey({repr('command' if self.platform == 'darwin' else 'ctrl')}, 'v'); "
-        else:
-            # Use regular pyautogui.write() for ASCII text
-            command += f"pyautogui.write({repr(text)}); "
+            if overwrite:
+                command += (
+                    f"pyautogui.hotkey({repr('command' if self.platform == 'darwin' else 'ctrl')}, 'a'); "
+                    "pyautogui.press('backspace'); "
+                )
 
-        if enter:
-            command += "pyautogui.press('enter'); "
-        return command
+            # Check if text contains Unicode characters that pyautogui.write() can't handle
+            has_unicode = any(ord(char) > 127 for char in text)
+
+            if has_unicode:
+                # Use clipboard method for Unicode characters
+                command += f"pyperclip.copy({repr(text)}); "
+                command += f"pyautogui.hotkey({repr('command' if self.platform == 'darwin' else 'ctrl')}, 'v'); "
+            else:
+                # Use regular pyautogui.write() for ASCII text
+                command += f"pyautogui.write({repr(text)}); "
+
+            if enter:
+                command += "pyautogui.press('enter'); "
+            return command
 
     @agent_action
     def save_to_knowledge(self, text: List[str]):
@@ -601,24 +621,36 @@ class OSWorldACI(ACI):
             ending_description:str, a very detailed description of where to end the drag action. This description should be at least a full sentence.
             hold_keys:List list of keys to hold while dragging
         """
-        coords1 = self.generate_coords(starting_description, self.obs)
-        coords2 = self.generate_coords(ending_description, self.obs)
-        x1, y1 = self.resize_coordinates(coords1)
-        x2, y2 = self.resize_coordinates(coords2)
+        from gui_agents.s3.utils.profiler import profiler
 
-        command = "import pyautogui; "
+        with profiler.profile("Action_DragDrop", metadata={
+            "start": starting_description,
+            "end": ending_description
+        }):
+            with profiler.profile("DragDrop_Start_Grounding"):
+                coords1 = self.generate_coords(starting_description, self.obs)
+                x1, y1 = self.resize_coordinates(coords1)
 
-        command += f"pyautogui.moveTo({x1}, {y1}); "
-        # TODO: specified duration?
-        for k in hold_keys:
-            command += f"pyautogui.keyDown({repr(k)}); "
-        command += f"pyautogui.dragTo({x2}, {y2}, duration=1., button='left'); pyautogui.mouseUp(); "
-        for k in hold_keys:
-            command += f"pyautogui.keyUp({repr(k)}); "
+            with profiler.profile("DragDrop_End_Grounding"):
+                coords2 = self.generate_coords(ending_description, self.obs)
+                x2, y2 = self.resize_coordinates(coords2)
 
-        # Return pyautoguicode to drag and drop the elements
+            command = "import pyautogui; "
 
-        return command
+            # Normalize keys for the current platform
+            normalized_hold_keys = [self._normalize_key_for_platform(key) for key in hold_keys]
+
+            command += f"pyautogui.moveTo({x1}, {y1}); "
+            # TODO: specified duration?
+            for k in normalized_hold_keys:
+                command += f"pyautogui.keyDown({repr(k)}); "
+            command += f"pyautogui.dragTo({x2}, {y2}, duration=1., button='left'); pyautogui.mouseUp(); "
+            for k in normalized_hold_keys:
+                command += f"pyautogui.keyUp({repr(k)}); "
+
+            # Return pyautoguicode to drag and drop the elements
+
+            return command
 
     @agent_action
     def highlight_text_span(
@@ -738,15 +770,64 @@ class OSWorldACI(ACI):
         else:
             return f"import pyautogui; import time; pyautogui.moveTo({x}, {y}); time.sleep(0.5); pyautogui.vscroll({clicks})"
 
+    def _normalize_key_for_platform(self, key: str) -> str:
+        """
+        Normalize key names to be compatible with pyautogui on the current platform.
+
+        PyAutoGUI expects specific key names for modifier keys:
+        - macOS (darwin): 'command', 'option', 'ctrl', 'shift'
+        - Windows: 'win', 'alt', 'ctrl', 'shift'
+        - Linux: 'super', 'alt', 'ctrl', 'shift'
+
+        This function maps common aliases to the correct pyautogui key names.
+
+        Args:
+            key: The key name to normalize (case-insensitive)
+
+        Returns:
+            Normalized key name for pyautogui on the current platform
+        """
+        key_lower = key.lower()
+
+        if self.platform == 'darwin':  # macOS
+            key_map = {
+                'cmd': 'command',
+                'win': 'command',  # Map Windows key to Command on Mac
+                'opt': 'option',
+                'meta': 'command',
+            }
+        elif self.platform == 'windows':
+            key_map = {
+                'command': 'win',
+                'cmd': 'win',
+                'opt': 'alt',
+                'option': 'alt',
+                'meta': 'win',
+            }
+        else:  # linux
+            key_map = {
+                'command': 'super',
+                'cmd': 'super',
+                'win': 'super',
+                'opt': 'alt',
+                'option': 'alt',
+                'meta': 'super',
+            }
+
+        return key_map.get(key_lower, key)  # Return normalized key or original if not in map
+
     @agent_action
     def hotkey(self, keys: List):
         """Press a hotkey combination
         Args:
             keys:List the keys to press in combination in a list format (e.g. ['ctrl', 'c'])
         """
-        # add quotes around the keys
-        keys = [f"'{key}'" for key in keys]
-        return f"import pyautogui; pyautogui.hotkey({', '.join(keys)})"
+        # Normalize keys for the current platform
+        normalized_keys = [self._normalize_key_for_platform(key) for key in keys]
+
+        # add quotes around the normalized keys
+        quoted_keys = [f"'{key}'" for key in normalized_keys]
+        return f"import pyautogui; pyautogui.hotkey({', '.join(quoted_keys)})"
 
     @agent_action
     def hold_and_press(self, hold_keys: List, press_keys: List):
@@ -755,13 +836,16 @@ class OSWorldACI(ACI):
             hold_keys:List, list of keys to hold
             press_keys:List, list of keys to press in a sequence
         """
+        # Normalize keys for the current platform
+        normalized_hold_keys = [self._normalize_key_for_platform(key) for key in hold_keys]
+        normalized_press_keys = [self._normalize_key_for_platform(key) for key in press_keys]
 
-        press_keys_str = "[" + ", ".join([f"'{key}'" for key in press_keys]) + "]"
+        press_keys_str = "[" + ", ".join([f"'{key}'" for key in normalized_press_keys]) + "]"
         command = "import pyautogui; "
-        for k in hold_keys:
+        for k in normalized_hold_keys:
             command += f"pyautogui.keyDown({repr(k)}); "
         command += f"pyautogui.press({press_keys_str}); "
-        for k in hold_keys:
+        for k in normalized_hold_keys:
             command += f"pyautogui.keyUp({repr(k)}); "
 
         return command
