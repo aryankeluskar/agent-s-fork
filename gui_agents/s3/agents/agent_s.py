@@ -55,6 +55,8 @@ class AgentS3(UIAgent):
         platform: str = platform.system().lower(),
         max_trajectory_length: int = 8,
         enable_reflection: bool = True,
+        reflection_engine_params: Dict = None,
+        reflection_frequency: int = 1,
     ):
         """Initialize a minimalist AgentS2 without hierarchy
 
@@ -64,11 +66,15 @@ class AgentS3(UIAgent):
             platform: Operating system platform (darwin, linux, windows)
             max_trajectory_length: Maximum number of image turns to keep
             enable_reflection: Creates a reflection agent to assist the worker agent
+            reflection_engine_params: Optional separate configuration for reflection agent (for using faster/cheaper model)
+            reflection_frequency: Reflect every N steps (1=every step, 2=every other step, etc.)
         """
 
         super().__init__(worker_engine_params, grounding_agent, platform)
         self.max_trajectory_length = max_trajectory_length
         self.enable_reflection = enable_reflection
+        self.reflection_engine_params = reflection_engine_params
+        self.reflection_frequency = reflection_frequency
 
         self.reset()
 
@@ -80,6 +86,8 @@ class AgentS3(UIAgent):
             platform=self.platform,
             max_trajectory_length=self.max_trajectory_length,
             enable_reflection=self.enable_reflection,
+            reflection_engine_params=self.reflection_engine_params,
+            reflection_frequency=self.reflection_frequency,
         )
 
     def predict(self, instruction: str, observation: Dict) -> Tuple[Dict, List[str]]:

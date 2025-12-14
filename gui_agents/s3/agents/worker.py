@@ -2,6 +2,8 @@ from functools import partial
 import logging
 import textwrap
 from typing import Dict, List, Tuple
+from concurrent.futures import ThreadPoolExecutor, Future
+import threading
 
 from gui_agents.s3.agents.grounding import ACI
 from gui_agents.s3.core.module import BaseModule
@@ -29,6 +31,8 @@ class Worker(BaseModule):
         platform: str = "ubuntu",
         max_trajectory_length: int = 8,
         enable_reflection: bool = True,
+        reflection_engine_params: Dict = None,
+        reflection_frequency: int = 1,
     ):
         """
         Worker receives the main task and generates actions, without the need of hierarchical planning
@@ -43,6 +47,10 @@ class Worker(BaseModule):
                 The amount of images turns to keep
             enable_reflection: bool
                 Whether to enable reflection
+            reflection_engine_params: Dict (optional)
+                Optional separate parameters for reflection agent (for using faster/cheaper model)
+            reflection_frequency: int
+                Reflect every N steps (1=every step, 2=every other step, etc.)
         """
         super().__init__(worker_engine_params, platform)
 
@@ -56,6 +64,10 @@ class Worker(BaseModule):
         self.grounding_agent = grounding_agent
         self.max_trajectory_length = max_trajectory_length
         self.enable_reflection = enable_reflection
+        self.reflection_frequency = reflection_frequency
+
+        # Use separate reflection engine params if provided, otherwise use worker engine params
+        self.reflection_engine_params = reflection_engine_params or worker_engine_params
 
         self.reset()
 
@@ -76,8 +88,10 @@ class Worker(BaseModule):
         ).replace("CURRENT_OS", self.platform)
 
         self.generator_agent = self._create_agent(sys_prompt)
+        # Use separate reflection engine params for potentially faster/cheaper model
         self.reflection_agent = self._create_agent(
-            PROCEDURAL_MEMORY.REFLECTION_ON_TRAJECTORY
+            PROCEDURAL_MEMORY.REFLECTION_ON_TRAJECTORY,
+            engine_params=self.reflection_engine_params
         )
 
         self.turn_count = 0
@@ -134,7 +148,7 @@ class Worker(BaseModule):
 
         Side Effects:
             - Updates reflection agent's history
-            - Generates reflection response with API call
+            - Generates reflection response with API call (if not skipped)
         """
         reflection = None
         reflection_thoughts = None
@@ -165,101 +179,88 @@ class Worker(BaseModule):
                     image_content=obs["screenshot"],
                     role="user",
                 )
-                with profiler.profile("API_Call_Reflection_LLM"):
-                    full_reflection = call_llm_safe(
-                        self.reflection_agent,
-                        temperature=self.temperature,
-                        use_thinking=self.use_thinking,
+
+                # Smart reflection skipping: only reflect every N steps based on frequency
+                should_reflect = (self.turn_count % self.reflection_frequency == 0)
+
+                if should_reflect:
+                    with profiler.profile("API_Call_Reflection_LLM"):
+                        full_reflection = call_llm_safe(
+                            self.reflection_agent,
+                            temperature=self.temperature,
+                            use_thinking=self.use_thinking,
+                        )
+                    reflection, reflection_thoughts = split_thinking_response(
+                        full_reflection
                     )
-                reflection, reflection_thoughts = split_thinking_response(
-                    full_reflection
-                )
-                self.reflections.append(reflection)
-                logger.info("REFLECTION THOUGHTS: %s", reflection_thoughts)
-                logger.info("REFLECTION: %s", reflection)
+                    self.reflections.append(reflection)
+                    logger.info("REFLECTION THOUGHTS: %s", reflection_thoughts)
+                    logger.info("REFLECTION: %s", reflection)
+                else:
+                    logger.info(f"REFLECTION SKIPPED (turn {self.turn_count}, frequency {self.reflection_frequency})")
         return reflection, reflection_thoughts
 
-    def generate_next_action(self, instruction: str, obs: Dict) -> Tuple[Dict, List]:
+    def _prepare_context_message(self) -> str:
         """
-        Predict the next action(s) based on the current observation.
+        Prepare context message with grounding buffer and code agent results.
+        This can run in parallel with reflection to save time.
+
+        Returns:
+            str: The context message string
         """
-        from gui_agents.s3.utils.profiler import profiler
-
-        self.grounding_agent.assign_screenshot(obs)
-        self.grounding_agent.set_task_instruction(instruction)
-
-        generator_message = (
-            ""
-            if self.turn_count > 0
-            else "The initial screen is provided. No action has been taken yet."
-        )
-
-        # Load the task into the system prompt
-        if self.turn_count == 0:
-            prompt_with_instructions = self.generator_agent.system_prompt.replace(
-                "TASK_DESCRIPTION", instruction
-            )
-            self.generator_agent.add_system_prompt(prompt_with_instructions)
-
-        # Get the per-step reflection
-        with profiler.profile("Reflection_Phase"):
-            reflection, reflection_thoughts = self._generate_reflection(instruction, obs)
-        if reflection:
-            generator_message += f"REFLECTION: You may use this reflection on the previous action and overall trajectory:\n{reflection}\n"
+        context_message = ""
 
         # Get the grounding agent's knowledge base buffer
-        generator_message += (
+        context_message += (
             f"\nCurrent Text Buffer = [{','.join(self.grounding_agent.notes)}]\n"
         )
 
-        # Add code agent result from previous step if available (from full task or subtask execution)
+        # Add code agent result from previous step if available
         if (
             hasattr(self.grounding_agent, "last_code_agent_result")
             and self.grounding_agent.last_code_agent_result is not None
         ):
             code_result = self.grounding_agent.last_code_agent_result
-            generator_message += f"\nCODE AGENT RESULT:\n"
-            generator_message += (
+            context_message += f"\nCODE AGENT RESULT:\n"
+            context_message += (
                 f"Task/Subtask Instruction: {code_result['task_instruction']}\n"
             )
-            generator_message += f"Steps Completed: {code_result['steps_executed']}\n"
-            generator_message += f"Max Steps: {code_result['budget']}\n"
-            generator_message += (
+            context_message += f"Steps Completed: {code_result['steps_executed']}\n"
+            context_message += f"Max Steps: {code_result['budget']}\n"
+            context_message += (
                 f"Completion Reason: {code_result['completion_reason']}\n"
             )
-            generator_message += f"Summary: {code_result['summary']}\n"
+            context_message += f"Summary: {code_result['summary']}\n"
             if code_result["execution_history"]:
-                generator_message += f"Execution History:\n"
+                context_message += f"Execution History:\n"
                 for i, step in enumerate(code_result["execution_history"]):
                     action = step["action"]
                     # Format code snippets with proper backticks
                     if "```python" in action:
-                        # Extract Python code and format it
                         code_start = action.find("```python") + 9
                         code_end = action.find("```", code_start)
                         if code_end != -1:
                             python_code = action[code_start:code_end].strip()
-                            generator_message += (
+                            context_message += (
                                 f"Step {i+1}: \n```python\n{python_code}\n```\n"
                             )
                         else:
-                            generator_message += f"Step {i+1}: \n{action}\n"
+                            context_message += f"Step {i+1}: \n{action}\n"
                     elif "```bash" in action:
-                        # Extract Bash code and format it
                         code_start = action.find("```bash") + 7
                         code_end = action.find("```", code_start)
                         if code_end != -1:
                             bash_code = action[code_start:code_end].strip()
-                            generator_message += (
+                            context_message += (
                                 f"Step {i+1}: \n```bash\n{bash_code}\n```\n"
                             )
                         else:
-                            generator_message += f"Step {i+1}: \n{action}\n"
+                            context_message += f"Step {i+1}: \n{action}\n"
                     else:
-                        generator_message += f"Step {i+1}: \n{action}\n"
-            generator_message += "\n"
+                        context_message += f"Step {i+1}: \n{action}\n"
+                context_message += "\n"
 
-            # Log the code agent result section for debugging (truncated execution history)
+            # Log the code agent result section for debugging (truncated)
             log_message = f"\nCODE AGENT RESULT:\n"
             log_message += (
                 f"Task/Subtask Instruction: {code_result['task_instruction']}\n"
@@ -270,10 +271,9 @@ class Worker(BaseModule):
             log_message += f"Summary: {code_result['summary']}\n"
             if code_result["execution_history"]:
                 log_message += f"Execution History (truncated):\n"
-                # Only log first 3 steps and last 2 steps to keep logs manageable
                 total_steps = len(code_result["execution_history"])
                 for i, step in enumerate(code_result["execution_history"]):
-                    if i < 3 or i >= total_steps - 2:  # First 3 and last 2 steps
+                    if i < 3 or i >= total_steps - 2:
                         action = step["action"]
                         if "```python" in action:
                             code_start = action.find("```python") + 9
@@ -304,7 +304,60 @@ class Worker(BaseModule):
                 f"WORKER_CODE_AGENT_RESULT_SECTION - Step {self.turn_count + 1}: Code agent result added to generator message:\n{log_message}"
             )
 
-            # Reset the code agent result after adding it to context
+        return context_message
+
+    def generate_next_action(self, instruction: str, obs: Dict) -> Tuple[Dict, List]:
+        """
+        Predict the next action(s) based on the current observation.
+        Uses parallel execution to run reflection and context preparation concurrently for speedup.
+        """
+        from gui_agents.s3.utils.profiler import profiler
+
+        self.grounding_agent.assign_screenshot(obs)
+        self.grounding_agent.set_task_instruction(instruction)
+
+        generator_message = (
+            ""
+            if self.turn_count > 0
+            else "The initial screen is provided. No action has been taken yet."
+        )
+
+        # Load the task into the system prompt
+        if self.turn_count == 0:
+            prompt_with_instructions = self.generator_agent.system_prompt.replace(
+                "TASK_DESCRIPTION", instruction
+            )
+            self.generator_agent.add_system_prompt(prompt_with_instructions)
+
+        # OPTIMIZATION: Run reflection and context preparation in parallel
+        # This saves time by overlapping the reflection LLM call with context preparation
+        reflection = None
+        reflection_thoughts = None
+        context_message = ""
+
+        # Use ThreadPoolExecutor to run both tasks in parallel
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            # Start both tasks in parallel
+            # Note: Reflection already has profiling inside _generate_reflection
+            reflection_future = executor.submit(self._generate_reflection, instruction, obs)
+            context_future = executor.submit(self._prepare_context_message)
+
+            # Wait for both to complete
+            reflection, reflection_thoughts = reflection_future.result()
+            context_message = context_future.result()
+
+        # Add reflection to message if available
+        if reflection:
+            generator_message += f"REFLECTION: You may use this reflection on the previous action and overall trajectory:\n{reflection}\n"
+
+        # Add the context message (grounding buffer + code agent results)
+        generator_message += context_message
+
+        # Reset the code agent result after adding it to context
+        if (
+            hasattr(self.grounding_agent, "last_code_agent_result")
+            and self.grounding_agent.last_code_agent_result is not None
+        ):
             self.grounding_agent.last_code_agent_result = None
 
         # Finalize the generator message

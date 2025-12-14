@@ -174,12 +174,10 @@ def run_agent(agent, instruction: str, scaled_width: int, scaled_height: int):
                 screenshot = pyautogui.screenshot()
                 screenshot = screenshot.resize((scaled_width, scaled_height), Image.LANCZOS)
 
-                # Save the screenshot to a BytesIO object
-                buffered = io.BytesIO()
-                screenshot.save(buffered, format="PNG")
+                # Compress screenshot using WebP format for faster LLM processing
+                from gui_agents.s3.utils.common_utils import compress_image
+                screenshot_bytes = compress_image(image=screenshot)
 
-                # Get the byte value of the screenshot
-                screenshot_bytes = buffered.getvalue()
                 # Convert to base64 string.
                 obs["screenshot"] = screenshot_bytes
 
@@ -326,10 +324,42 @@ def main():
         help="Enable reflection agent to assist the worker agent",
     )
     parser.add_argument(
+        "--reflection_frequency",
+        type=int,
+        default=1,
+        help="Reflection frequency: reflect every N steps (1=every step, 2=every other step, etc.). Higher values skip more reflections for speed.",
+    )
+    parser.add_argument(
         "--enable_local_env",
         action="store_true",
         default=False,
         help="Enable local coding environment for code execution (WARNING: Executes arbitrary code locally)",
+    )
+
+    # Reflection model config (optional - defaults to main model if not specified)
+    parser.add_argument(
+        "--reflection_provider",
+        type=str,
+        default=None,
+        help="Provider for reflection model (e.g., openai, anthropic). If not set, uses main model provider.",
+    )
+    parser.add_argument(
+        "--reflection_model",
+        type=str,
+        default=None,
+        help="Faster/cheaper model for reflection (e.g., gpt-4o-mini, claude-3-5-haiku-20241022). If not set, uses main model.",
+    )
+    parser.add_argument(
+        "--reflection_url",
+        type=str,
+        default=None,
+        help="URL for reflection model API. If not set, uses main model URL.",
+    )
+    parser.add_argument(
+        "--reflection_api_key",
+        type=str,
+        default=None,
+        help="API key for reflection model. If not set, uses main model API key.",
     )
 
     args = parser.parse_args()
@@ -348,6 +378,18 @@ def main():
         "api_key": args.model_api_key,
         "temperature": getattr(args, "model_temperature", None),
     }
+
+    # Load reflection engine params (optional - defaults to main engine)
+    reflection_engine_params = None
+    if args.reflection_model or args.reflection_provider:
+        reflection_engine_params = {
+            "engine_type": args.reflection_provider or args.provider,
+            "model": args.reflection_model or args.model,
+            "base_url": args.reflection_url or args.model_url,
+            "api_key": args.reflection_api_key or args.model_api_key,
+            "temperature": getattr(args, "model_temperature", None),
+        }
+        print(f"🔄 Using separate reflection model: {reflection_engine_params['model']}")
 
     # Load the grounding engine from a custom endpoint
     engine_params_for_grounding = {
@@ -408,6 +450,8 @@ def main():
         platform=current_platform,
         max_trajectory_length=args.max_trajectory_length,
         enable_reflection=args.enable_reflection,
+        reflection_engine_params=reflection_engine_params,
+        reflection_frequency=args.reflection_frequency,
     )
 
     while True:
