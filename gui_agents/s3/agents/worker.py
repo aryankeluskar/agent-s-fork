@@ -316,6 +316,11 @@ class Worker(BaseModule):
         self.grounding_agent.assign_screenshot(obs)
         self.grounding_agent.set_task_instruction(instruction)
 
+        # OPTIMIZATION: Clear grounding cache at the start of each new step
+        # Cache is useful within a step (validation + execution) but should reset between steps
+        if hasattr(self.grounding_agent, '_grounding_cache'):
+            self.grounding_agent._grounding_cache.clear()
+
         generator_message = (
             ""
             if self.turn_count > 0

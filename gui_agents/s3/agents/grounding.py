@@ -1,4 +1,5 @@
 import re
+import hashlib
 from collections import defaultdict
 from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple
@@ -210,6 +211,12 @@ class OSWorldACI(ACI):
         self.current_screenshot_width = None
         self.current_screenshot_height = None
 
+        # OPTIMIZATION: Cache grounding model responses to avoid duplicate calls
+        # Key: (element_description, screenshot_hash) -> Value: coordinates [x, y]
+        self._grounding_cache = {}
+        self._cache_hits = 0
+        self._cache_misses = 0
+
         # Configure the visual grounding model responsible for coordinate generation
         self.grounding_model = LMMAgent(engine_params_for_grounding)
         self.engine_params_for_grounding = engine_params_for_grounding
@@ -290,6 +297,20 @@ class OSWorldACI(ACI):
         logger = logging.getLogger("desktopenv.agent")
 
         with profiler.profile("Grounding_generate_coords", metadata={"element": ref_expr}):
+            # OPTIMIZATION: Check cache first to avoid duplicate LLM calls
+            # Create a cache key from element description + screenshot hash
+            screenshot_hash = hashlib.md5(obs["screenshot"]).hexdigest()[:16]  # Use first 16 chars for brevity
+            cache_key = (ref_expr, screenshot_hash)
+
+            if cache_key in self._grounding_cache:
+                self._cache_hits += 1
+                coords = self._grounding_cache[cache_key]
+                logger.info(f"✨ Cache hit! Returning cached coordinates: {coords} (hits: {self._cache_hits}, misses: {self._cache_misses})")
+                return coords
+
+            self._cache_misses += 1
+            logger.info(f"🔍 Cache miss, calling grounding model... (hits: {self._cache_hits}, misses: {self._cache_misses})")
+
             # Reset the grounding model state
             self.grounding_model.reset()
 
@@ -309,6 +330,9 @@ class OSWorldACI(ACI):
 
             coords = [int(numericals[0]), int(numericals[1])]
             logger.info(f"📍 Parsed coordinates: {coords}")
+
+            # OPTIMIZATION: Cache the result for future use
+            self._grounding_cache[cache_key] = coords
 
             return coords
 
