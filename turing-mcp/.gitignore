@@ -24,3 +24,13 @@ venv/
 
 # Ruff
 .ruff_cache/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~

@@ -3,17 +3,28 @@ requires = ["uv_build>=0.8.15,<0.9.0"]
 build-backend = "uv_build"
 
 [project]
-name = "hello-server"
+name = "agent-s-server"
 version = "0.1.0"
-description = "An MCP server built with Smithery"
+description = "Agent-S GUI Automation MCP Server"
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Agent-S Team", email = "agent-s@example.com"}
 ]
 
 requires-python = ">=3.10"
 dependencies = [
     "mcp>=1.15.0",
     "smithery>=0.4.2",
+    "numpy>=1.24.0",
+    "backoff>=2.2.1",
+    "pandas>=2.0.0",
+    "openai>=1.0.0",
+    "anthropic>=0.18.0",
+    "google-generativeai>=0.3.0",
+    "pyautogui>=0.9.54",
+    "pillow>=10.0.0",
+    "pytesseract>=0.3.10",
+    "tiktoken>=0.5.0",
+    "pyperclip>=1.8.2",
 ]
 
 [project.scripts]
@@ -22,5 +33,5 @@ start = "smithery.cli.start:main" # Run the MCP server in production mode
 playground = "smithery.cli.playground:main" # Run server with interactive testing playground
 
 [tool.smithery]
-server = "hello_server.server:create_server" # Function that returns a patched FastMCP server
+server = "agent_s_server.server:create_server" # Function that returns a patched FastMCP server
 log_level = "warning" # Production log level (optional, defaults to "warning")

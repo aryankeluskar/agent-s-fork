@@ -1,0 +1,35 @@
+{
+  "mcpServers": {
+    "agent-s": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/aryank/Developer/Agent-S/turing-mcp",
+        "run",
+        "start"
+      ],
+      "env": {
+        "PYTHONPATH": "/Users/aryank/Developer/Agent-S"
+      },
+      "config": {
+        "model_provider": "openai",
+        "model_name": "gpt-5.2-2025-12-11",
+        "model_api_key": "YOUR_OPENAI_API_KEY",
+        "model_url": null,
+        "model_temperature": null,
+        
+        "ground_provider": "openai",
+        "ground_model": "uitars-7b",
+        "ground_url": "https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run",
+        "ground_api_key": null,
+        "grounding_width": 1120,
+        "grounding_height": 1120,
+        
+        "enable_reflection": true,
+        "max_steps": 15,
+        "max_trajectory_length": 8,
+        "enable_local_env": false
+      }
+    }
+  }
+}
