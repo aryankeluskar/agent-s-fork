@@ -375,7 +375,7 @@ def main():
     parser.add_argument(
         "--use_robotgo",
         action="store_true",
-        default=False,
+        default=True,
         help="Use Go robotgo executor instead of Python pyautogui (requires robotgo_executor binary)",
     )
 
