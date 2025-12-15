@@ -1,116 +1,286 @@
 aryank@Aryans-MacBook-Air Agent-S % agent_s \
+      --provider openai \
+      --model gpt-5.2-2025-12-11 \
+      --reflection_provider cerebras \
+      --reflection_model qwen-3-32b \
       --ground_provider huggingface \
       --ground_url https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run \
       --ground_model ui-tars-1.5-7b \
       --grounding_width 1280 \
-      --grounding_height 720 \
-      --reflection_model gpt-4o-mini \
-      --reflection_frequency 3  
-🔄 Using separate reflection model: gpt-4o-mini
-[2025-12-13 22:28:08,731 INFO code_agent/102-MainProcess] CodeAgent initialized with budget=20
+      --grounding_height 720
+🔄 Using separate reflection model: qwen-3-32b
+[2025-12-14 22:56:45,926 INFO code_agent/102-MainProcess] CodeAgent initialized with budget=20
 
 🔧 Initializing Agent-S...
 📐 Screen size: 1470x956
 📸 Screenshot size: 1470x956
 🎯 Grounding model config: 1280x720
 📡 Testing grounding model connectivity...
-[2025-12-13 22:28:09,054 INFO grounding/246-MainProcess] 🔍 Validating grounding model connectivity...
-[2025-12-13 22:28:09,056 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
-[2025-12-13 22:28:10,929 INFO profiler/152-MainProcess] ⏱️        LLM_Attempt_1: 1873.14ms
+[2025-12-14 22:56:46,256 INFO grounding/253-MainProcess] 🔍 Validating grounding model connectivity...
+[2025-12-14 22:56:46,258 INFO grounding/312-MainProcess] 🔍 Cache miss, calling grounding model... (hits: 0, misses: 1)
+[2025-12-14 22:56:46,258 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
+[2025-12-14 22:56:48,164 INFO profiler/152-MainProcess] ⏱️        LLM_Attempt_1: 1906.08ms
 Response success!
-[2025-12-13 22:28:10,929 INFO profiler/152-MainProcess] ⏱️      LLM_Call_with_Retries: 1873.40ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:28:10,930 INFO profiler/152-MainProcess] ⏱️    API_Call_Grounding_Model: 1873.51ms | {'element': 'center of screen'}
-[2025-12-13 22:28:10,930 INFO grounding/305-MainProcess] 🎯 Grounding model response: (714,495)
+[2025-12-14 22:56:48,165 INFO profiler/152-MainProcess] ⏱️      LLM_Call_with_Retries: 1906.30ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:56:48,165 INFO profiler/152-MainProcess] ⏱️    API_Call_Grounding_Model: 1906.41ms | {'element': 'center of screen'}
+[2025-12-14 22:56:48,165 INFO grounding/326-MainProcess] 🎯 Grounding model response: (714,495)
 RAW GROUNDING MODEL RESPONSE: (714,495)
-[2025-12-13 22:28:10,930 INFO grounding/311-MainProcess] 📍 Parsed coordinates: [714, 495]
-[2025-12-13 22:28:10,930 INFO profiler/152-MainProcess] ⏱️  Grounding_generate_coords: 1874.18ms | {'element': 'center of screen'}
-[2025-12-13 22:28:10,930 INFO grounding/255-MainProcess] ✅ Grounding model validation successful! Test coordinates: [714, 495]
+[2025-12-14 22:56:48,165 INFO grounding/332-MainProcess] 📍 Parsed coordinates: [714, 495]
+[2025-12-14 22:56:48,165 INFO profiler/152-MainProcess] ⏱️  Grounding_generate_coords: 1908.11ms | {'element': 'center of screen'}
+[2025-12-14 22:56:48,165 INFO grounding/262-MainProcess] ✅ Grounding model validation successful! Test coordinates: [714, 495]
 ✅ Grounding model ready!
 💡 Coordinates will be scaled from 1470x956 → 1470x956
 
-Query: open google images on brave browser, look up a minions meme. copy the image from there and open messages. open soham daga's contact and send him the meme, along with a message to lock in for Turing    
-[2025-12-13 22:28:27,978 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 471.06ms
+[2025-12-14 22:56:48,166 INFO engine/515-MainProcess] 🧠 Initialized Cerebras engine: model=qwen-3-32b, base_url=https://api.cerebras.ai/v1
+Query: open brave browser, open https://images.google.com/, look up a meme about minions, right click an image and copy, open messages, open soham daga's contact, paste into soham daga's text thread, type "lock in for Turing", hit enter to send
+[2025-12-14 22:56:59,195 INFO engine/515-MainProcess] 🧠 Initialized Cerebras engine: model=qwen-3-32b, base_url=https://api.cerebras.ai/v1
+[2025-12-14 22:56:59,488 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 289.05ms
 
 🔄 Step 1/15: Getting next action from agent...
-[2025-12-13 22:28:33,412 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 5431.61ms
+[2025-12-14 22:57:03,337 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 3846.51ms
 Response success!
-[2025-12-13 22:28:33,413 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 5431.92ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:28:33,417 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 5435.88ms
-[2025-12-13 22:28:33,417 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 5436.09ms
-[2025-12-13 22:28:33,417 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-No previous action has been taken yet, so there’s nothing to verify.
+[2025-12-14 22:57:03,337 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 3846.77ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:57:03,342 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 3851.41ms
+[2025-12-14 22:57:03,342 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 3851.58ms
+[2025-12-14 22:57:03,342 INFO worker/387-MainProcess] PLAN:
+ (Previous action verification)
+No previous action to verify; this is the initial state.
 
-(Screenshot Analysis)  
-You’re on macOS (Darwin) with the Cursor editor open. A terminal pane is visible showing logs and a prompt, and the task query is displayed in the terminal area. No browser or Messages app is currently open in view.
+(Screenshot Analysis)
+Cursor (VS Code) is open and in focus on macOS. A Python file (`cli_app.py`) is open with the integrated terminal visible at the bottom showing logs. No browser or Messages app is currently open in the foreground.
 
-(Next Action)  
-Open the Brave browser so we can go to Google Images and search for a Minions meme.
+(Next Action)
+Open Brave Browser to begin the workflow.
 
 (Grounded Action)
 ```python
 agent.open("Brave Browser")
 ```
-[2025-12-13 22:28:33,422 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 5.09ms
-[2025-12-13 22:28:33,423 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 5444.26ms
+[2025-12-14 22:57:03,345 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 2.72ms
+[2025-12-14 22:57:03,345 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 3857.44ms
 EXECUTING CODE: import pyautogui; import time; pyautogui.hotkey('command', 'space', interval=0.5); pyautogui.typewrite('Brave Browser'); pyautogui.press('enter'); time.sleep(1.0)
-[2025-12-13 22:28:38,223 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 3794.01ms
-[2025-12-13 22:28:39,225 INFO profiler/152-MainProcess] ⏱️  Step_1: 11718.12ms
-[2025-12-13 22:28:39,561 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 334.64ms
+[2025-12-14 22:57:08,173 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 3817.22ms
+[2025-12-14 22:57:09,179 INFO profiler/152-MainProcess] ⏱️  Step_1: 9980.38ms
+[2025-12-14 22:57:09,413 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 233.03ms
 
 🔄 Step 2/15: Getting next action from agent...
-[2025-12-13 22:28:39,563 INFO worker/200-MainProcess] REFLECTION SKIPPED (turn 1, frequency 3)
-[2025-12-13 22:28:45,022 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 5458.39ms
+[2025-12-14 22:57:09,436 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 20.75ms
+Attempt 1 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:10,442 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_2: 0.18ms
+Attempt 2 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:11,449 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_3: 0.21ms
+Attempt 3 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+Max retries reached. Handling failure.
+[2025-12-14 22:57:11,450 WARNING common_utils/84-MainProcess] LLM call failed after 3 attempts. Last error: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:11,451 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 2035.29ms | {'model': 'qwen-3-32b', 'temperature': None, 'attempts': 3, 'success': False, 'retries': 2}
+[2025-12-14 22:57:11,451 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 2035.60ms
+[2025-12-14 22:57:11,451 INFO worker/197-MainProcess] REFLECTION THOUGHTS: 
+[2025-12-14 22:57:11,451 INFO worker/198-MainProcess] REFLECTION: 
+[2025-12-14 22:57:15,635 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 4182.78ms
 Response success!
-[2025-12-13 22:28:45,023 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 5458.67ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:28:45,028 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 5463.81ms
-[2025-12-13 22:28:45,028 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 5464.05ms
-[2025-12-13 22:28:45,028 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-Brave Browser opened successfully and is currently in the foreground.
+[2025-12-14 22:57:15,636 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 4182.98ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:57:15,639 INFO grounding/312-MainProcess] 🔍 Cache miss, calling grounding model... (hits: 0, misses: 2)
+[2025-12-14 22:57:15,640 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
+[2025-12-14 22:57:17,208 INFO profiler/152-MainProcess] ⏱️                    LLM_Attempt_1: 1567.96ms
+Response success!
+[2025-12-14 22:57:17,208 INFO profiler/152-MainProcess] ⏱️                  LLM_Call_with_Retries: 1568.21ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:57:17,208 INFO profiler/152-MainProcess] ⏱️                API_Call_Grounding_Model: 1568.36ms | {'element': 'The address bar at the top of the Brave browser window'}
+[2025-12-14 22:57:17,208 INFO grounding/326-MainProcess] 🎯 Grounding model response: (646,56)
+RAW GROUNDING MODEL RESPONSE: (646,56)
+[2025-12-14 22:57:17,208 INFO grounding/332-MainProcess] 📍 Parsed coordinates: [646, 56]
+[2025-12-14 22:57:17,209 INFO profiler/152-MainProcess] ⏱️              Grounding_generate_coords: 1570.18ms | {'element': 'The address bar at the top of the Brave browser window'}
+[2025-12-14 22:57:17,209 INFO profiler/152-MainProcess] ⏱️            Type_Grounding: 1570.54ms
+[2025-12-14 22:57:17,209 INFO profiler/152-MainProcess] ⏱️          Action_Type: 1570.76ms | {'text_length': 26}
+[2025-12-14 22:57:17,209 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 5756.62ms
+[2025-12-14 22:57:17,209 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 5756.81ms
+[2025-12-14 22:57:17,209 INFO worker/387-MainProcess] PLAN:
+ (Previous action verification)
+Brave Browser successfully opened and is now in the foreground.
 
-(Screenshot Analysis)  
-Brave is open on a GitHub page (bytedance/UI-TARS-desktop). The address bar is visible at the top, and no Google Images page is open yet.
+(Screenshot Analysis)
+Brave is open on a new tab page with the address bar available at the top. No website has been loaded yet.
 
-(Next Action)  
-Focus the address bar and navigate to Google Images so we can search for a Minions meme.
+(Next Action)
+Navigate to https://images.google.com/ using the address bar.
 
 (Grounded Action)
 ```python
-agent.hotkey(["cmd", "l"])
+agent.type("The address bar at the top of the Brave browser window", text="https://images.google.com/", overwrite=True, enter=True)
 ```
-[2025-12-13 22:28:45,032 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 3.46ms
-[2025-12-13 22:28:45,033 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 5470.31ms
-EXECUTING CODE: import pyautogui; pyautogui.hotkey('command', 'l')
-[2025-12-13 22:28:46,186 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 152.31ms
-[2025-12-13 22:28:47,188 INFO profiler/152-MainProcess] ⏱️  Step_2: 7961.63ms
-[2025-12-13 22:28:47,516 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 327.41ms
+[2025-12-14 22:57:17,214 INFO grounding/308-MainProcess] ✨ Cache hit! Returning cached coordinates: [646, 56] (hits: 1, misses: 2)
+[2025-12-14 22:57:17,214 INFO profiler/152-MainProcess] ⏱️            Grounding_generate_coords: 0.86ms | {'element': 'The address bar at the top of the Brave browser window'}
+[2025-12-14 22:57:17,214 INFO profiler/152-MainProcess] ⏱️          Type_Grounding: 1.11ms
+[2025-12-14 22:57:17,214 INFO profiler/152-MainProcess] ⏱️        Action_Type: 1.26ms | {'text_length': 26}
+[2025-12-14 22:57:17,215 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 4.91ms
+[2025-12-14 22:57:17,215 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 7801.30ms
+EXECUTING CODE: import pyautogui; 
+try:
+    import pyperclip
+except ImportError:
+    import subprocess
+    subprocess.run('echo "osworld-public-evaluation" | sudo -S apt-get install -y xclip xsel', shell=True, check=True)
+    subprocess.check_call([subprocess.sys.executable, '-m', 'pip', 'install', 'pyperclip'])
+    import pyperclip
+
+pyautogui.click(646, 56); pyautogui.hotkey('command', 'a'); pyautogui.press('backspace'); pyautogui.write('https://images.google.com/'); pyautogui.press('enter'); 
+[2025-12-14 22:57:19,441 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 1224.44ms
+[2025-12-14 22:57:20,443 INFO profiler/152-MainProcess] ⏱️  Step_2: 11262.70ms
+[2025-12-14 22:57:20,627 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 182.64ms
 
 🔄 Step 3/15: Getting next action from agent...
-[2025-12-13 22:28:47,518 INFO worker/200-MainProcess] REFLECTION SKIPPED (turn 2, frequency 3)
-[2025-12-13 22:28:50,726 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 3208.22ms
+[2025-12-14 22:57:20,629 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 0.13ms
+Attempt 1 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:21,635 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_2: 0.23ms
+Attempt 2 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:22,642 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_3: 0.22ms
+Attempt 3 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+Max retries reached. Handling failure.
+[2025-12-14 22:57:22,643 WARNING common_utils/84-MainProcess] LLM call failed after 3 attempts. Last error: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:22,643 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 2013.83ms | {'model': 'qwen-3-32b', 'temperature': None, 'attempts': 3, 'success': False, 'retries': 2}
+[2025-12-14 22:57:22,643 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 2014.14ms
+[2025-12-14 22:57:22,643 INFO worker/197-MainProcess] REFLECTION THOUGHTS: 
+[2025-12-14 22:57:22,644 INFO worker/198-MainProcess] REFLECTION: 
+[2025-12-14 22:57:26,324 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 3679.40ms
 Response success!
-[2025-12-13 22:28:50,726 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 3208.33ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:28:50,728 INFO profiler/152-MainProcess] ⏱️          Action_Type: 0.06ms | {'text_length': 25}
-[2025-12-13 22:28:50,728 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 3210.30ms
-[2025-12-13 22:28:50,728 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 3210.36ms
-[2025-12-13 22:28:50,728 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-The address bar is now focused and highlighted (blue outline), so the hotkey worked.
+[2025-12-14 22:57:26,324 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 3679.67ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:57:26,327 INFO grounding/312-MainProcess] 🔍 Cache miss, calling grounding model... (hits: 1, misses: 3)
+[2025-12-14 22:57:26,328 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
+[2025-12-14 22:57:27,409 INFO profiler/152-MainProcess] ⏱️                    LLM_Attempt_1: 1081.49ms
+Response success!
+[2025-12-14 22:57:27,409 INFO profiler/152-MainProcess] ⏱️                  LLM_Call_with_Retries: 1081.71ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:57:27,410 INFO profiler/152-MainProcess] ⏱️                API_Call_Grounding_Model: 1081.85ms | {'element': 'The Google Images search bar in the center of the page'}
+[2025-12-14 22:57:27,410 INFO grounding/326-MainProcess] 🎯 Grounding model response: (713,476)
+RAW GROUNDING MODEL RESPONSE: (713,476)
+[2025-12-14 22:57:27,410 INFO grounding/332-MainProcess] 📍 Parsed coordinates: [713, 476]
+[2025-12-14 22:57:27,410 INFO profiler/152-MainProcess] ⏱️              Grounding_generate_coords: 1082.86ms | {'element': 'The Google Images search bar in the center of the page'}
+[2025-12-14 22:57:27,410 INFO profiler/152-MainProcess] ⏱️            Type_Grounding: 1083.15ms
+[2025-12-14 22:57:27,410 INFO profiler/152-MainProcess] ⏱️          Action_Type: 1083.34ms | {'text_length': 12}
+[2025-12-14 22:57:27,411 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 4766.35ms
+[2025-12-14 22:57:27,411 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 4766.50ms
+[2025-12-14 22:57:27,411 INFO worker/387-MainProcess] PLAN:
+ (Previous action verification)
+Google Images (https://images.google.com/) successfully loaded.
 
-(Screenshot Analysis)  
-Brave is still on the GitHub repository page, with the URL selected in the address bar ready to be replaced.
+(Screenshot Analysis)
+The Google Images homepage is visible with the search bar centered on the page and ready for input.
 
-(Next Action)  
-Type the Google Images URL and navigate there.
+(Next Action)
+Search for a minions meme by typing a query into the Google Images search bar and submitting.
 
 (Grounded Action)
 ```python
-agent.type(text="https://images.google.com", overwrite=True, enter=True)
+agent.type("The Google Images search bar in the center of the page", text="minions meme", enter=True)
 ```
-[2025-12-13 22:28:50,730 INFO profiler/152-MainProcess] ⏱️        Action_Type: 0.01ms | {'text_length': 25}
-[2025-12-13 22:28:50,730 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 1.23ms
-[2025-12-13 22:28:50,730 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 3213.17ms
+[2025-12-14 22:57:27,414 INFO grounding/308-MainProcess] ✨ Cache hit! Returning cached coordinates: [713, 476] (hits: 2, misses: 3)
+[2025-12-14 22:57:27,414 INFO profiler/152-MainProcess] ⏱️            Grounding_generate_coords: 0.28ms | {'element': 'The Google Images search bar in the center of the page'}
+[2025-12-14 22:57:27,414 INFO profiler/152-MainProcess] ⏱️          Type_Grounding: 0.56ms
+[2025-12-14 22:57:27,414 INFO profiler/152-MainProcess] ⏱️        Action_Type: 0.69ms | {'text_length': 12}
+[2025-12-14 22:57:27,415 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 3.63ms
+[2025-12-14 22:57:27,415 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 6787.78ms
 EXECUTING CODE: import pyautogui; 
 try:
     import pyperclip
@@ -120,374 +290,622 @@ except ImportError:
     subprocess.check_call([subprocess.sys.executable, '-m', 'pip', 'install', 'pyperclip'])
     import pyperclip
 
-pyautogui.hotkey('command', 'a'); pyautogui.press('backspace'); pyautogui.write('https://images.google.com'); pyautogui.press('enter'); 
-[2025-12-13 22:28:52,812 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 1081.21ms
-[2025-12-13 22:28:53,814 INFO profiler/152-MainProcess] ⏱️  Step_3: 6624.76ms
-[2025-12-13 22:28:54,141 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 326.84ms
+pyautogui.click(713, 476); pyautogui.write('minions meme'); pyautogui.press('enter'); 
+[2025-12-14 22:57:29,037 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 620.86ms
+[2025-12-14 22:57:30,039 INFO profiler/152-MainProcess] ⏱️  Step_3: 9594.76ms
+[2025-12-14 22:57:30,246 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 201.36ms
 
 🔄 Step 4/15: Getting next action from agent...
-[2025-12-13 22:28:58,753 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 4610.29ms
+[2025-12-14 22:57:30,248 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 0.11ms
+Attempt 1 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:31,253 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_2: 0.12ms
+Attempt 2 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:32,259 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_3: 0.17ms
+Attempt 3 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+Max retries reached. Handling failure.
+[2025-12-14 22:57:32,259 WARNING common_utils/84-MainProcess] LLM call failed after 3 attempts. Last error: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:32,260 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 2012.38ms | {'model': 'qwen-3-32b', 'temperature': None, 'attempts': 3, 'success': False, 'retries': 2}
+[2025-12-14 22:57:32,260 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 2012.63ms
+[2025-12-14 22:57:32,260 INFO worker/197-MainProcess] REFLECTION THOUGHTS: 
+[2025-12-14 22:57:32,260 INFO worker/198-MainProcess] REFLECTION: 
+[2025-12-14 22:57:37,804 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 5542.40ms
 Response success!
-[2025-12-13 22:28:58,753 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 4610.52ms | {'model': 'gpt-4o-mini', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:28:58,753 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 4610.65ms
-[2025-12-13 22:28:58,753 INFO worker/197-MainProcess] REFLECTION THOUGHTS: (Previous action verification)  
-The action to navigate to Google Images was successful, as the page is now open.
-
-(Screenshot Analysis)  
-The Google Images homepage is displayed with the search bar prominent, ready for a search query.
-
-(Next Action)  
-Enter the search term "Minions meme" to find the desired image.
-
-(Grounded Action)
-```python
-agent.type(text="Minions meme", enter=True)
-```
-[2025-12-13 22:28:58,754 INFO worker/198-MainProcess] REFLECTION: (Previous action verification)  
-The action to navigate to Google Images was successful, as the page is now open.
-
-(Screenshot Analysis)  
-The Google Images homepage is displayed with the search bar prominent, ready for a search query.
-
-(Next Action)  
-Enter the search term "Minions meme" to find the desired image.
-
-(Grounded Action)
-```python
-agent.type(text="Minions meme", enter=True)
-```
-[2025-12-13 22:29:04,057 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 5302.96ms
+[2025-12-14 22:57:37,804 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 5542.79ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:57:37,808 INFO grounding/312-MainProcess] 🔍 Cache miss, calling grounding model... (hits: 2, misses: 4)
+[2025-12-14 22:57:37,809 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
+[2025-12-14 22:57:39,071 INFO profiler/152-MainProcess] ⏱️                    LLM_Attempt_1: 1262.05ms
 Response success!
-[2025-12-13 22:29:04,058 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 5303.41ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:04,062 INFO profiler/152-MainProcess] ⏱️          Action_Type: 0.08ms | {'text_length': 12}
-[2025-12-13 22:29:04,062 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 5307.70ms
-[2025-12-13 22:29:04,062 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 5307.85ms
-[2025-12-13 22:29:04,062 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-Google Images is open, but the search term hasn’t been entered yet (search box is empty).
+[2025-12-14 22:57:39,071 INFO profiler/152-MainProcess] ⏱️                  LLM_Call_with_Retries: 1262.29ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:57:39,071 INFO profiler/152-MainProcess] ⏱️                API_Call_Grounding_Model: 1262.46ms | {'element': "The minion meme thumbnail in the top row that says 'Respect your parents.' (white background with text and a minion) to open its context menu"}
+[2025-12-14 22:57:39,071 INFO grounding/326-MainProcess] 🎯 Grounding model response: (373,317)
+RAW GROUNDING MODEL RESPONSE: (373,317)
+[2025-12-14 22:57:39,072 INFO grounding/332-MainProcess] 📍 Parsed coordinates: [373, 317]
+[2025-12-14 22:57:39,072 INFO profiler/152-MainProcess] ⏱️              Grounding_generate_coords: 1264.02ms | {'element': "The minion meme thumbnail in the top row that says 'Respect your parents.' (white background with text and a minion) to open its context menu"}
+[2025-12-14 22:57:39,072 INFO profiler/152-MainProcess] ⏱️            Click_Grounding: 1264.33ms
+[2025-12-14 22:57:39,072 INFO grounding/518-MainProcess] 🖱️  Click coordinates: [373, 317] → (373, 317)
+[2025-12-14 22:57:39,072 INFO profiler/152-MainProcess] ⏱️          Action_Click: 1264.58ms | {'element': "The minion meme thumbnail in the top row that says 'Respect your parents.' (white background with text and a minion) to open its context menu"}
+[2025-12-14 22:57:39,072 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 6810.71ms
+[2025-12-14 22:57:39,072 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 6810.92ms
+[2025-12-14 22:57:39,073 INFO worker/387-MainProcess] PLAN:
+ (Previous action verification)
+The search for “minions meme” was successful; Google Images results are displayed.
 
-(Screenshot Analysis)  
-Brave shows the Google Images homepage in dark mode, with the central search bar ready for input.
+(Screenshot Analysis)
+Brave shows a Google Images results grid with multiple minion meme thumbnails visible. The first row includes a “Respect your parents…” meme image (Reddit source) and other thumbnails.
 
-(Next Action)  
-Type “Minions meme” into the search box and submit the search.
+(Next Action)
+Right-click a visible minion meme image thumbnail to open the context menu so we can copy the image.
 
 (Grounded Action)
 ```python
-agent.type(text="Minions meme", enter=True)
+agent.click("The minion meme thumbnail in the top row that says 'Respect your parents.' (white background with text and a minion) to open its context menu", 1, "right")
 ```
-[2025-12-13 22:29:04,064 INFO profiler/152-MainProcess] ⏱️        Action_Type: 0.01ms | {'text_length': 12}
-[2025-12-13 22:29:04,064 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 1.77ms
-[2025-12-13 22:29:04,064 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 9922.80ms
-EXECUTING CODE: import pyautogui; 
-try:
-    import pyperclip
-except ImportError:
-    import subprocess
-    subprocess.run('echo "osworld-public-evaluation" | sudo -S apt-get install -y xclip xsel', shell=True, check=True)
-    subprocess.check_call([subprocess.sys.executable, '-m', 'pip', 'install', 'pyperclip'])
-    import pyperclip
-
-pyautogui.write('Minions meme'); pyautogui.press('enter'); 
-[2025-12-13 22:29:05,594 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 528.15ms
-[2025-12-13 22:29:06,597 INFO profiler/152-MainProcess] ⏱️  Step_4: 12782.31ms
-[2025-12-13 22:29:07,036 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 438.16ms
+[2025-12-14 22:57:39,078 INFO grounding/308-MainProcess] ✨ Cache hit! Returning cached coordinates: [373, 317] (hits: 3, misses: 4)
+[2025-12-14 22:57:39,078 INFO profiler/152-MainProcess] ⏱️            Grounding_generate_coords: 1.35ms | {'element': "The minion meme thumbnail in the top row that says 'Respect your parents.' (white background with text and a minion) to open its context menu"}
+[2025-12-14 22:57:39,079 INFO profiler/152-MainProcess] ⏱️          Click_Grounding: 1.64ms
+[2025-12-14 22:57:39,079 INFO grounding/518-MainProcess] 🖱️  Click coordinates: [373, 317] → (373, 317)
+[2025-12-14 22:57:39,079 INFO profiler/152-MainProcess] ⏱️        Action_Click: 1.85ms | {'element': "The minion meme thumbnail in the top row that says 'Respect your parents.' (white background with text and a minion) to open its context menu"}
+[2025-12-14 22:57:39,079 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 6.15ms
+[2025-12-14 22:57:39,081 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 8835.11ms
+EXECUTING CODE: import pyautogui; import pyautogui; pyautogui.click(373, 317, clicks=1, button='right'); 
+[2025-12-14 22:57:40,207 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 124.26ms
+[2025-12-14 22:57:41,208 INFO profiler/152-MainProcess] ⏱️  Step_4: 11163.86ms
+[2025-12-14 22:57:41,420 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 211.02ms
 
 🔄 Step 5/15: Getting next action from agent...
-[2025-12-13 22:29:07,038 INFO worker/200-MainProcess] REFLECTION SKIPPED (turn 4, frequency 3)
-[2025-12-13 22:29:12,815 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 5776.71ms
+[2025-12-14 22:57:41,421 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 0.03ms
+Attempt 1 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:42,427 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_2: 0.21ms
+Attempt 2 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:43,434 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_3: 0.22ms
+Attempt 3 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+Max retries reached. Handling failure.
+[2025-12-14 22:57:43,435 WARNING common_utils/84-MainProcess] LLM call failed after 3 attempts. Last error: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:43,435 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 2013.79ms | {'model': 'qwen-3-32b', 'temperature': None, 'attempts': 3, 'success': False, 'retries': 2}
+[2025-12-14 22:57:43,435 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 2014.04ms
+[2025-12-14 22:57:43,436 INFO worker/197-MainProcess] REFLECTION THOUGHTS: 
+[2025-12-14 22:57:43,436 INFO worker/198-MainProcess] REFLECTION: 
+[2025-12-14 22:57:48,184 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 4747.46ms
 Response success!
-[2025-12-13 22:29:12,816 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 5777.18ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:12,820 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
-[2025-12-13 22:29:14,662 INFO profiler/152-MainProcess] ⏱️                    LLM_Attempt_1: 1842.25ms
+[2025-12-14 22:57:48,184 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 4747.68ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:57:48,189 INFO grounding/312-MainProcess] 🔍 Cache miss, calling grounding model... (hits: 3, misses: 5)
+[2025-12-14 22:57:48,190 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
+[2025-12-14 22:57:49,347 INFO profiler/152-MainProcess] ⏱️                    LLM_Attempt_1: 1157.07ms
 Response success!
-[2025-12-13 22:29:14,663 INFO profiler/152-MainProcess] ⏱️                  LLM_Call_with_Retries: 1842.48ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:14,663 INFO profiler/152-MainProcess] ⏱️                API_Call_Grounding_Model: 1842.63ms | {'element': 'The first image thumbnail in the top-left of the Google Images results grid (a Minion standing in a dark scene)'}
-[2025-12-13 22:29:14,663 INFO grounding/305-MainProcess] 🎯 Grounding model response: (133,317)
-RAW GROUNDING MODEL RESPONSE: (133,317)
-[2025-12-13 22:29:14,663 INFO grounding/311-MainProcess] 📍 Parsed coordinates: [133, 317]
-[2025-12-13 22:29:14,663 INFO profiler/152-MainProcess] ⏱️              Grounding_generate_coords: 1843.77ms | {'element': 'The first image thumbnail in the top-left of the Google Images results grid (a Minion standing in a dark scene)'}
-[2025-12-13 22:29:14,663 INFO profiler/152-MainProcess] ⏱️            Click_Grounding: 1844.05ms
-[2025-12-13 22:29:14,663 INFO grounding/494-MainProcess] 🖱️  Click coordinates: [133, 317] → (133, 317)
-[2025-12-13 22:29:14,664 INFO profiler/152-MainProcess] ⏱️          Action_Click: 1844.31ms | {'element': 'The first image thumbnail in the top-left of the Google Images results grid (a Minion standing in a dark scene)'}
-[2025-12-13 22:29:14,664 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 7625.27ms
-[2025-12-13 22:29:14,664 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 7625.41ms
-[2025-12-13 22:29:14,664 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-The search for “Minions meme” succeeded—Google Images results are displayed.
+[2025-12-14 22:57:49,347 INFO profiler/152-MainProcess] ⏱️                  LLM_Call_with_Retries: 1157.50ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:57:49,347 INFO profiler/152-MainProcess] ⏱️                API_Call_Grounding_Model: 1157.77ms | {'element': "The 'Copy Image' option in the right-click context menu"}
+[2025-12-14 22:57:49,348 INFO grounding/326-MainProcess] 🎯 Grounding model response: (446,369)
+RAW GROUNDING MODEL RESPONSE: (446,369)
+[2025-12-14 22:57:49,348 INFO grounding/332-MainProcess] 📍 Parsed coordinates: [446, 369]
+[2025-12-14 22:57:49,348 INFO profiler/152-MainProcess] ⏱️              Grounding_generate_coords: 1159.85ms | {'element': "The 'Copy Image' option in the right-click context menu"}
+[2025-12-14 22:57:49,349 INFO profiler/152-MainProcess] ⏱️            Click_Grounding: 1160.23ms
+[2025-12-14 22:57:49,349 INFO grounding/518-MainProcess] 🖱️  Click coordinates: [446, 369] → (446, 369)
+[2025-12-14 22:57:49,349 INFO profiler/152-MainProcess] ⏱️          Action_Click: 1160.54ms | {'element': "The 'Copy Image' option in the right-click context menu"}
+[2025-12-14 22:57:49,349 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 5912.32ms
+[2025-12-14 22:57:49,349 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 5912.47ms
+[2025-12-14 22:57:49,349 INFO worker/387-MainProcess] PLAN:
+ (Previous action verification)
+The right-click succeeded; the image context menu is open with options including “Copy Image.”
 
-(Screenshot Analysis)  
-Brave shows a grid of Minions meme images. Individual thumbnails are clickable; no image is opened in a preview panel yet.
+(Screenshot Analysis)
+Brave is showing Google Images results with a context menu over the “Respect your parents” minion meme thumbnail. The menu includes “Copy Image,” “Copy Image Address,” etc.
 
-(Next Action)  
-Open one meme by clicking a thumbnail so we can copy the image.
-
-(Grounded Action)
-```python
-agent.click("The first image thumbnail in the top-left of the Google Images results grid (a Minion standing in a dark scene)", 1, "left")
-```
-[2025-12-13 22:29:14,669 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
-[2025-12-13 22:29:15,736 INFO profiler/152-MainProcess] ⏱️                  LLM_Attempt_1: 1066.61ms
-Response success!
-[2025-12-13 22:29:15,736 INFO profiler/152-MainProcess] ⏱️                LLM_Call_with_Retries: 1066.86ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:15,736 INFO profiler/152-MainProcess] ⏱️              API_Call_Grounding_Model: 1067.03ms | {'element': 'The first image thumbnail in the top-left of the Google Images results grid (a Minion standing in a dark scene)'}
-[2025-12-13 22:29:15,737 INFO grounding/305-MainProcess] 🎯 Grounding model response: (133,317)
-RAW GROUNDING MODEL RESPONSE: (133,317)
-[2025-12-13 22:29:15,737 INFO grounding/311-MainProcess] 📍 Parsed coordinates: [133, 317]
-[2025-12-13 22:29:15,737 INFO profiler/152-MainProcess] ⏱️            Grounding_generate_coords: 1068.37ms | {'element': 'The first image thumbnail in the top-left of the Google Images results grid (a Minion standing in a dark scene)'}
-[2025-12-13 22:29:15,737 INFO profiler/152-MainProcess] ⏱️          Click_Grounding: 1068.62ms
-[2025-12-13 22:29:15,737 INFO grounding/494-MainProcess] 🖱️  Click coordinates: [133, 317] → (133, 317)
-[2025-12-13 22:29:15,737 INFO profiler/152-MainProcess] ⏱️        Action_Click: 1068.87ms | {'element': 'The first image thumbnail in the top-left of the Google Images results grid (a Minion standing in a dark scene)'}
-[2025-12-13 22:29:15,737 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 1073.22ms
-[2025-12-13 22:29:15,738 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 8700.99ms
-EXECUTING CODE: import pyautogui; import pyautogui; pyautogui.click(133, 317, clicks=1, button='left'); 
-[2025-12-13 22:29:16,859 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 120.34ms
-[2025-12-13 22:29:17,861 INFO profiler/152-MainProcess] ⏱️  Step_5: 11262.68ms
-[2025-12-13 22:29:18,295 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 432.75ms
-
-🔄 Step 6/15: Getting next action from agent...
-[2025-12-13 22:29:18,296 INFO worker/200-MainProcess] REFLECTION SKIPPED (turn 5, frequency 3)
-[2025-12-13 22:29:26,767 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 8470.43ms
-Response success!
-[2025-12-13 22:29:26,768 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 8470.87ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:26,773 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
-[2025-12-13 22:29:28,213 INFO profiler/152-MainProcess] ⏱️                    LLM_Attempt_1: 1440.37ms
-Response success!
-[2025-12-13 22:29:28,213 INFO profiler/152-MainProcess] ⏱️                  LLM_Call_with_Retries: 1440.74ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:28,213 INFO profiler/152-MainProcess] ⏱️                API_Call_Grounding_Model: 1440.86ms | {'element': 'The large Minion image shown in the right-side preview panel (TikTok preview), clicking directly on the image area to bring up the context options'}
-[2025-12-13 22:29:28,213 INFO grounding/305-MainProcess] 🎯 Grounding model response: (1151,534)
-RAW GROUNDING MODEL RESPONSE: (1151,534)
-[2025-12-13 22:29:28,214 INFO grounding/311-MainProcess] 📍 Parsed coordinates: [1151, 534]
-[2025-12-13 22:29:28,214 INFO profiler/152-MainProcess] ⏱️              Grounding_generate_coords: 1441.96ms | {'element': 'The large Minion image shown in the right-side preview panel (TikTok preview), clicking directly on the image area to bring up the context options'}
-[2025-12-13 22:29:28,214 INFO profiler/152-MainProcess] ⏱️            Click_Grounding: 1442.22ms
-[2025-12-13 22:29:28,214 INFO grounding/494-MainProcess] 🖱️  Click coordinates: [1151, 534] → (1151, 534)
-[2025-12-13 22:29:28,214 INFO profiler/152-MainProcess] ⏱️          Action_Click: 1442.42ms | {'element': 'The large Minion image shown in the right-side preview panel (TikTok preview), clicking directly on the image area to bring up the context options'}
-[2025-12-13 22:29:28,214 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 9917.53ms
-[2025-12-13 22:29:28,214 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 9917.63ms
-[2025-12-13 22:29:28,214 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-The click worked: the selected thumbnail is highlighted, and an image preview panel opened on the right.
-
-(Screenshot Analysis)  
-Google Images results are on the left, with a right-side preview showing a TikTok-hosted Minion image. The image is visible in the preview pane.
-
-(Next Action)  
-Copy the image from the preview so we can paste it into Messages.
-
-(Grounded Action)
-```python
-agent.click("The large Minion image shown in the right-side preview panel (TikTok preview), clicking directly on the image area to bring up the context options", 1, "right")
-```
-[2025-12-13 22:29:28,219 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
-[2025-12-13 22:29:29,193 INFO profiler/152-MainProcess] ⏱️                  LLM_Attempt_1: 973.75ms
-Response success!
-[2025-12-13 22:29:29,193 INFO profiler/152-MainProcess] ⏱️                LLM_Call_with_Retries: 974.00ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:29,193 INFO profiler/152-MainProcess] ⏱️              API_Call_Grounding_Model: 974.14ms | {'element': 'The large Minion image shown in the right-side preview panel (TikTok preview), clicking directly on the image area to bring up the context options'}
-[2025-12-13 22:29:29,193 INFO grounding/305-MainProcess] 🎯 Grounding model response: (1151,534)
-RAW GROUNDING MODEL RESPONSE: (1151,534)
-[2025-12-13 22:29:29,193 INFO grounding/311-MainProcess] 📍 Parsed coordinates: [1151, 534]
-[2025-12-13 22:29:29,194 INFO profiler/152-MainProcess] ⏱️            Grounding_generate_coords: 975.36ms | {'element': 'The large Minion image shown in the right-side preview panel (TikTok preview), clicking directly on the image area to bring up the context options'}
-[2025-12-13 22:29:29,194 INFO profiler/152-MainProcess] ⏱️          Click_Grounding: 975.60ms
-[2025-12-13 22:29:29,194 INFO grounding/494-MainProcess] 🖱️  Click coordinates: [1151, 534] → (1151, 534)
-[2025-12-13 22:29:29,194 INFO profiler/152-MainProcess] ⏱️        Action_Click: 975.87ms | {'element': 'The large Minion image shown in the right-side preview panel (TikTok preview), clicking directly on the image area to bring up the context options'}
-[2025-12-13 22:29:29,194 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 979.65ms
-[2025-12-13 22:29:29,194 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 10899.49ms
-EXECUTING CODE: import pyautogui; import pyautogui; pyautogui.click(1151, 534, clicks=1, button='right'); 
-[2025-12-13 22:29:30,311 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 115.36ms
-[2025-12-13 22:29:31,312 INFO profiler/152-MainProcess] ⏱️  Step_6: 13450.36ms
-[2025-12-13 22:29:31,715 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 402.12ms
-
-🔄 Step 7/15: Getting next action from agent...
-[2025-12-13 22:29:37,002 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 5285.67ms
-Response success!
-[2025-12-13 22:29:37,003 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 5286.13ms | {'model': 'gpt-4o-mini', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:37,003 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 5286.30ms
-[2025-12-13 22:29:37,003 INFO worker/197-MainProcess] REFLECTION THOUGHTS: (Previous action verification)  
-Clicking the image triggered options for interaction, confirming that the action was successful.
-
-(Screenshot Analysis)  
-The context menu appears, providing options related to the image, including "Copy Image." 
-
-(Next Action)  
-Select the option to copy the image to the clipboard so it can be sent via Messages.
-
-(Grounded Action)
-```python
-agent.click("Copy Image")
-```
-[2025-12-13 22:29:37,003 INFO worker/198-MainProcess] REFLECTION: (Previous action verification)  
-Clicking the image triggered options for interaction, confirming that the action was successful.
-
-(Screenshot Analysis)  
-The context menu appears, providing options related to the image, including "Copy Image." 
-
-(Next Action)  
-Select the option to copy the image to the clipboard so it can be sent via Messages.
-
-(Grounded Action)
-```python
-agent.click("Copy Image")
-```
-[2025-12-13 22:29:43,418 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 6413.77ms
-Response success!
-[2025-12-13 22:29:43,418 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 6414.03ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:43,423 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
-[2025-12-13 22:29:44,995 INFO profiler/152-MainProcess] ⏱️                    LLM_Attempt_1: 1571.89ms
-Response success!
-[2025-12-13 22:29:44,995 INFO profiler/152-MainProcess] ⏱️                  LLM_Call_with_Retries: 1572.31ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:44,995 INFO profiler/152-MainProcess] ⏱️                API_Call_Grounding_Model: 1572.53ms | {'element': "The 'Copy Image' option in the right-click context menu"}
-[2025-12-13 22:29:44,995 INFO grounding/305-MainProcess] 🎯 Grounding model response: (1266,776)
-RAW GROUNDING MODEL RESPONSE: (1266,776)
-[2025-12-13 22:29:44,996 INFO grounding/311-MainProcess] 📍 Parsed coordinates: [1266, 776]
-[2025-12-13 22:29:44,996 INFO profiler/152-MainProcess] ⏱️              Grounding_generate_coords: 1573.77ms | {'element': "The 'Copy Image' option in the right-click context menu"}
-[2025-12-13 22:29:44,996 INFO profiler/152-MainProcess] ⏱️            Click_Grounding: 1574.01ms
-[2025-12-13 22:29:44,996 INFO grounding/494-MainProcess] 🖱️  Click coordinates: [1266, 776] → (1266, 776)
-[2025-12-13 22:29:44,996 INFO profiler/152-MainProcess] ⏱️          Action_Click: 1574.26ms | {'element': "The 'Copy Image' option in the right-click context menu"}
-[2025-12-13 22:29:44,996 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 7992.10ms
-[2025-12-13 22:29:44,996 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 7992.24ms
-[2025-12-13 22:29:44,996 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-The context menu is open, and it includes “Copy Image,” so we can copy the image to the clipboard.
-
-(Screenshot Analysis)  
-Brave shows Google Images results with the TikTok preview on the right and a context menu over the image area listing options like “Copy Image.”
-
-(Next Action)  
-Click “Copy Image” in the context menu.
+(Next Action)
+Click “Copy Image” to copy the image to the clipboard.
 
 (Grounded Action)
 ```python
 agent.click("The 'Copy Image' option in the right-click context menu", 1, "left")
 ```
-[2025-12-13 22:29:45,001 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
-[2025-12-13 22:29:46,001 INFO profiler/152-MainProcess] ⏱️                  LLM_Attempt_1: 1000.12ms
+[2025-12-14 22:57:49,365 INFO grounding/308-MainProcess] ✨ Cache hit! Returning cached coordinates: [446, 369] (hits: 4, misses: 5)
+[2025-12-14 22:57:49,365 INFO profiler/152-MainProcess] ⏱️            Grounding_generate_coords: 0.56ms | {'element': "The 'Copy Image' option in the right-click context menu"}
+[2025-12-14 22:57:49,365 INFO profiler/152-MainProcess] ⏱️          Click_Grounding: 0.69ms
+[2025-12-14 22:57:49,365 INFO grounding/518-MainProcess] 🖱️  Click coordinates: [446, 369] → (446, 369)
+[2025-12-14 22:57:49,365 INFO profiler/152-MainProcess] ⏱️        Action_Click: 0.79ms | {'element': "The 'Copy Image' option in the right-click context menu"}
+[2025-12-14 22:57:49,365 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 16.06ms
+[2025-12-14 22:57:49,366 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 7945.30ms
+EXECUTING CODE: import pyautogui; import pyautogui; pyautogui.click(446, 369, clicks=1, button='left'); 
+[2025-12-14 22:57:50,485 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 118.30ms
+[2025-12-14 22:57:51,487 INFO profiler/152-MainProcess] ⏱️  Step_5: 10277.67ms
+[2025-12-14 22:57:51,708 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 220.09ms
+
+🔄 Step 6/15: Getting next action from agent...
+[2025-12-14 22:57:51,709 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 0.04ms
+Attempt 1 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:52,715 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_2: 0.26ms
+Attempt 2 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:53,718 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_3: 0.15ms
+Attempt 3 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+Max retries reached. Handling failure.
+[2025-12-14 22:57:53,719 WARNING common_utils/84-MainProcess] LLM call failed after 3 attempts. Last error: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:57:53,719 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 2010.14ms | {'model': 'qwen-3-32b', 'temperature': None, 'attempts': 3, 'success': False, 'retries': 2}
+[2025-12-14 22:57:53,719 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 2010.32ms
+[2025-12-14 22:57:53,719 INFO worker/197-MainProcess] REFLECTION THOUGHTS: 
+[2025-12-14 22:57:53,720 INFO worker/198-MainProcess] REFLECTION: 
+[2025-12-14 22:57:58,948 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 5227.08ms
 Response success!
-[2025-12-13 22:29:46,001 INFO profiler/152-MainProcess] ⏱️                LLM_Call_with_Retries: 1000.36ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:46,001 INFO profiler/152-MainProcess] ⏱️              API_Call_Grounding_Model: 1000.50ms | {'element': "The 'Copy Image' option in the right-click context menu"}
-[2025-12-13 22:29:46,001 INFO grounding/305-MainProcess] 🎯 Grounding model response: (1266,776)
-RAW GROUNDING MODEL RESPONSE: (1266,776)
-[2025-12-13 22:29:46,001 INFO grounding/311-MainProcess] 📍 Parsed coordinates: [1266, 776]
-[2025-12-13 22:29:46,002 INFO profiler/152-MainProcess] ⏱️            Grounding_generate_coords: 1001.25ms | {'element': "The 'Copy Image' option in the right-click context menu"}
-[2025-12-13 22:29:46,002 INFO profiler/152-MainProcess] ⏱️          Click_Grounding: 1001.47ms
-[2025-12-13 22:29:46,002 INFO grounding/494-MainProcess] 🖱️  Click coordinates: [1266, 776] → (1266, 776)
-[2025-12-13 22:29:46,002 INFO profiler/152-MainProcess] ⏱️        Action_Click: 1001.71ms | {'element': "The 'Copy Image' option in the right-click context menu"}
-[2025-12-13 22:29:46,002 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 1005.48ms
-[2025-12-13 22:29:46,002 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 14287.25ms
-EXECUTING CODE: import pyautogui; import pyautogui; pyautogui.click(1266, 776, clicks=1, button='left'); 
-[2025-12-13 22:29:47,122 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 117.85ms
-[2025-12-13 22:29:48,124 INFO profiler/152-MainProcess] ⏱️  Step_7: 16810.64ms
-[2025-12-13 22:29:48,520 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 395.90ms
+[2025-12-14 22:57:58,948 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 5227.22ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:57:58,949 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 5228.96ms
+[2025-12-14 22:57:58,949 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 5229.07ms
+[2025-12-14 22:57:58,950 INFO worker/387-MainProcess] PLAN:
+ (Previous action verification)
+“Copy Image” was selected and the context menu is now closed, indicating the image was likely copied to the clipboard.
 
-🔄 Step 8/15: Getting next action from agent...
-[2025-12-13 22:29:48,521 INFO worker/200-MainProcess] REFLECTION SKIPPED (turn 7, frequency 3)
-[2025-12-13 22:29:54,704 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 6182.69ms
-Response success!
-[2025-12-13 22:29:54,705 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 6183.15ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:29:54,709 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 6187.07ms
-[2025-12-13 22:29:54,709 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 6187.26ms
-[2025-12-13 22:29:54,709 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-“Copy Image” was clicked and the context menu closed, which strongly indicates the image has been copied to the clipboard.
+(Screenshot Analysis)
+Brave remains open on the Google Images results page for “minions meme.” No other apps are in the foreground.
 
-(Screenshot Analysis)  
-We’re still in Brave on Google Images with the preview panel open on the right. No further UI prompts are visible.
-
-(Next Action)  
-Open the Messages app so we can paste and send the meme to Soham Daga with the message.
+(Next Action)
+Open the Messages app so we can paste the copied image into Soham Daga’s thread.
 
 (Grounded Action)
 ```python
 agent.open("Messages")
 ```
-[2025-12-13 22:29:54,712 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 2.63ms
-[2025-12-13 22:29:54,712 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 6192.23ms
+[2025-12-14 22:57:58,951 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 1.54ms
+[2025-12-14 22:57:58,952 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 7243.59ms
 EXECUTING CODE: import pyautogui; import time; pyautogui.hotkey('command', 'space', interval=0.5); pyautogui.typewrite('Messages'); pyautogui.press('enter'); time.sleep(1.0)
-[2025-12-13 22:29:59,299 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 3585.01ms
-[2025-12-13 22:30:00,302 INFO profiler/152-MainProcess] ⏱️  Step_8: 12177.93ms
-[2025-12-13 22:30:00,775 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 472.04ms
+[2025-12-14 22:58:03,536 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 3582.86ms
+[2025-12-14 22:58:04,540 INFO profiler/152-MainProcess] ⏱️  Step_6: 13051.85ms
+[2025-12-14 22:58:04,772 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 231.40ms
+
+🔄 Step 7/15: Getting next action from agent...
+[2025-12-14 22:58:04,779 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 0.19ms
+Attempt 1 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:05,785 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_2: 0.26ms
+Attempt 2 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:06,792 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_3: 0.09ms
+Attempt 3 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+Max retries reached. Handling failure.
+[2025-12-14 22:58:06,792 WARNING common_utils/84-MainProcess] LLM call failed after 3 attempts. Last error: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:06,792 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 2013.39ms | {'model': 'qwen-3-32b', 'temperature': None, 'attempts': 3, 'success': False, 'retries': 2}
+[2025-12-14 22:58:06,792 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 2013.51ms
+[2025-12-14 22:58:06,792 INFO worker/197-MainProcess] REFLECTION THOUGHTS: 
+[2025-12-14 22:58:06,792 INFO worker/198-MainProcess] REFLECTION: 
+[2025-12-14 22:58:12,320 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 5526.99ms
+Response success!
+[2025-12-14 22:58:12,320 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 5527.29ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:58:12,323 INFO grounding/312-MainProcess] 🔍 Cache miss, calling grounding model... (hits: 4, misses: 6)
+[2025-12-14 22:58:12,323 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
+[2025-12-14 22:58:13,551 INFO profiler/152-MainProcess] ⏱️                    LLM_Attempt_1: 1227.83ms
+Response success!
+[2025-12-14 22:58:13,551 INFO profiler/152-MainProcess] ⏱️                  LLM_Call_with_Retries: 1228.06ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:58:13,551 INFO profiler/152-MainProcess] ⏱️                API_Call_Grounding_Model: 1228.23ms | {'element': "The conversation list entry on the left labeled 'ASU Soham Daga'"}
+[2025-12-14 22:58:13,552 INFO grounding/326-MainProcess] 🎯 Grounding model response: (185,259)
+RAW GROUNDING MODEL RESPONSE: (185,259)
+[2025-12-14 22:58:13,552 INFO grounding/332-MainProcess] 📍 Parsed coordinates: [185, 259]
+[2025-12-14 22:58:13,552 INFO profiler/152-MainProcess] ⏱️              Grounding_generate_coords: 1229.77ms | {'element': "The conversation list entry on the left labeled 'ASU Soham Daga'"}
+[2025-12-14 22:58:13,552 INFO profiler/152-MainProcess] ⏱️            Click_Grounding: 1230.03ms
+[2025-12-14 22:58:13,552 INFO grounding/518-MainProcess] 🖱️  Click coordinates: [185, 259] → (185, 259)
+[2025-12-14 22:58:13,552 INFO profiler/152-MainProcess] ⏱️          Action_Click: 1230.42ms | {'element': "The conversation list entry on the left labeled 'ASU Soham Daga'"}
+[2025-12-14 22:58:13,553 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 6759.68ms
+[2025-12-14 22:58:13,553 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 6759.87ms
+[2025-12-14 22:58:13,553 INFO worker/387-MainProcess] PLAN:
+ (Previous action verification)
+Messages opened successfully and is now the active application.
+
+(Screenshot Analysis)
+The Messages window is open with the conversation list on the left. A conversation with “Stella Foster Dev” is currently selected. “ASU Soham Daga” is visible in the list below it.
+
+(Next Action)
+Open Soham Daga’s contact/thread by clicking “ASU Soham Daga” in the conversation list.
+
+(Grounded Action)
+```python
+agent.click("The conversation list entry on the left labeled 'ASU Soham Daga'", 1, "left")
+```
+[2025-12-14 22:58:13,556 INFO grounding/308-MainProcess] ✨ Cache hit! Returning cached coordinates: [185, 259] (hits: 5, misses: 6)
+[2025-12-14 22:58:13,556 INFO profiler/152-MainProcess] ⏱️            Grounding_generate_coords: 0.59ms | {'element': "The conversation list entry on the left labeled 'ASU Soham Daga'"}
+[2025-12-14 22:58:13,556 INFO profiler/152-MainProcess] ⏱️          Click_Grounding: 0.78ms
+[2025-12-14 22:58:13,556 INFO grounding/518-MainProcess] 🖱️  Click coordinates: [185, 259] → (185, 259)
+[2025-12-14 22:58:13,556 INFO profiler/152-MainProcess] ⏱️        Action_Click: 0.96ms | {'element': "The conversation list entry on the left labeled 'ASU Soham Daga'"}
+[2025-12-14 22:58:13,556 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 3.31ms
+[2025-12-14 22:58:13,557 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 8784.09ms
+EXECUTING CODE: import pyautogui; import pyautogui; pyautogui.click(185, 259, clicks=1, button='left'); 
+[2025-12-14 22:58:14,679 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 120.60ms
+[2025-12-14 22:58:15,680 INFO profiler/152-MainProcess] ⏱️  Step_7: 11139.57ms
+[2025-12-14 22:58:15,874 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 193.02ms
+
+🔄 Step 8/15: Getting next action from agent...
+[2025-12-14 22:58:15,876 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 0.10ms
+Attempt 1 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:16,881 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_2: 0.12ms
+Attempt 2 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:17,887 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_3: 0.24ms
+Attempt 3 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+Max retries reached. Handling failure.
+[2025-12-14 22:58:17,888 WARNING common_utils/84-MainProcess] LLM call failed after 3 attempts. Last error: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:17,888 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 2012.48ms | {'model': 'qwen-3-32b', 'temperature': None, 'attempts': 3, 'success': False, 'retries': 2}
+[2025-12-14 22:58:17,888 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 2012.81ms
+[2025-12-14 22:58:17,889 INFO worker/197-MainProcess] REFLECTION THOUGHTS: 
+[2025-12-14 22:58:17,889 INFO worker/198-MainProcess] REFLECTION: 
+[2025-12-14 22:58:23,525 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 5635.47ms
+Response success!
+[2025-12-14 22:58:23,526 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 5635.66ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:58:23,527 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 5637.13ms
+[2025-12-14 22:58:23,527 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 5637.25ms
+[2025-12-14 22:58:23,527 INFO worker/387-MainProcess] PLAN:
+ (Previous action verification)
+Successfully opened the “ASU Soham Daga” conversation; it is highlighted and the chat thread is visible.
+
+(Screenshot Analysis)
+Messages is focused on the Soham Daga thread. The text input field at the bottom is empty and ready. We need to paste the copied image and then send the message “lock in for Turing”.
+
+(Next Action)
+Paste the copied image into the message compose field.
+
+(Grounded Action)
+```python
+agent.hotkey(["command", "v"])
+```
+[2025-12-14 22:58:23,528 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 0.82ms
+[2025-12-14 22:58:23,528 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 7654.00ms
+EXECUTING CODE: import pyautogui; pyautogui.hotkey('command', 'v')
+[2025-12-14 22:58:24,679 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 149.27ms
+[2025-12-14 22:58:25,680 INFO profiler/152-MainProcess] ⏱️  Step_8: 9999.08ms
+[2025-12-14 22:58:25,903 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 222.01ms
 
 🔄 Step 9/15: Getting next action from agent...
-[2025-12-13 22:30:00,777 INFO worker/200-MainProcess] REFLECTION SKIPPED (turn 8, frequency 3)
-[2025-12-13 22:30:08,230 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 7460.39ms
+[2025-12-14 22:58:25,904 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 0.05ms
+Attempt 1 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:26,910 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_2: 0.21ms
+Attempt 2 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:27,913 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_3: 0.27ms
+Attempt 3 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+Max retries reached. Handling failure.
+[2025-12-14 22:58:27,914 WARNING common_utils/84-MainProcess] LLM call failed after 3 attempts. Last error: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:27,915 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 2010.45ms | {'model': 'qwen-3-32b', 'temperature': None, 'attempts': 3, 'success': False, 'retries': 2}
+[2025-12-14 22:58:27,915 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 2010.75ms
+[2025-12-14 22:58:27,915 INFO worker/197-MainProcess] REFLECTION THOUGHTS: 
+[2025-12-14 22:58:27,915 INFO worker/198-MainProcess] REFLECTION: 
+[2025-12-14 22:58:34,231 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 6314.47ms
 Response success!
-[2025-12-13 22:30:08,230 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 7460.68ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:30:08,238 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 7468.20ms
-[2025-12-13 22:30:08,238 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 7468.32ms
-[2025-12-13 22:30:08,238 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-Messages opened successfully, and the conversation with “ASU Soham Daga” is already selected.
-
-(Screenshot Analysis)  
-The Messages window is focused with the Soham Daga thread open. The iMessage input field is visible at the bottom, ready for typing/pasting. The meme should be in the clipboard from Brave.
-
-(Next Action)  
-Paste the copied meme image into the message input box (so it’s attached/embedded), then we’ll add the text and send.
-
-(Grounded Action)
-```python
-agent.hotkey(["cmd", "v"])
-```
-[2025-12-13 22:30:08,240 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 1.61ms
-[2025-12-13 22:30:08,240 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 7472.80ms
-EXECUTING CODE: import pyautogui; pyautogui.hotkey('command', 'v')
-[2025-12-13 22:30:09,390 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 149.58ms
-[2025-12-13 22:30:10,390 INFO profiler/152-MainProcess] ⏱️  Step_9: 10097.20ms
-[2025-12-13 22:30:10,840 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 449.46ms
-
-🔄 Step 10/15: Getting next action from agent...
-[2025-12-13 22:30:19,394 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 8558.10ms
+[2025-12-14 22:58:34,231 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 6314.60ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:58:34,233 INFO grounding/312-MainProcess] 🔍 Cache miss, calling grounding model... (hits: 5, misses: 7)
+[2025-12-14 22:58:34,234 INFO engine/433-MainProcess] 📡 Modal endpoint detected, using OpenAI-compatible path: https://aryankeluskar--uitars-grounding-server-uitarstransformer-03ccf2.modal.run/v1
+[2025-12-14 22:58:35,373 INFO profiler/152-MainProcess] ⏱️                    LLM_Attempt_1: 1139.38ms
 Response success!
-[2025-12-13 22:30:19,394 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 8558.47ms | {'model': 'gpt-4o-mini', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:30:19,394 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 8558.65ms
-[2025-12-13 22:30:19,394 INFO worker/197-MainProcess] REFLECTION THOUGHTS: (Previous action verification)  
-The paste action succeeded; the Minion meme image is now embedded in the message input box.
+[2025-12-14 22:58:35,374 INFO profiler/152-MainProcess] ⏱️                  LLM_Call_with_Retries: 1139.76ms | {'model': 'unknown', 'temperature': 0.0, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:58:35,374 INFO profiler/152-MainProcess] ⏱️                API_Call_Grounding_Model: 1139.95ms | {'element': 'The iMessage text input field at the bottom of the ASU Soham Daga conversation'}
+[2025-12-14 22:58:35,374 INFO grounding/326-MainProcess] 🎯 Grounding model response: (643,806)
+RAW GROUNDING MODEL RESPONSE: (643,806)
+[2025-12-14 22:58:35,374 INFO grounding/332-MainProcess] 📍 Parsed coordinates: [643, 806]
+[2025-12-14 22:58:35,374 INFO profiler/152-MainProcess] ⏱️              Grounding_generate_coords: 1141.48ms | {'element': 'The iMessage text input field at the bottom of the ASU Soham Daga conversation'}
+[2025-12-14 22:58:35,375 INFO profiler/152-MainProcess] ⏱️            Type_Grounding: 1141.80ms
+[2025-12-14 22:58:35,375 INFO profiler/152-MainProcess] ⏱️          Action_Type: 1142.03ms | {'text_length': 18}
+[2025-12-14 22:58:35,375 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 7458.50ms
+[2025-12-14 22:58:35,375 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 7458.66ms
+[2025-12-14 22:58:35,375 INFO worker/387-MainProcess] PLAN:
+ (Previous action verification)
+The paste action succeeded: the minions meme image is now visible in the message compose area.
 
-(Screenshot Analysis)  
-The Messages window shows the Minion image ready to be sent. The input field is visible beneath the image, but no text has been added yet.
+(Screenshot Analysis)
+Messages is still focused on the “ASU Soham Daga” thread. The image preview is inserted in the input box, ready to send, and the cursor is active in the compose field.
 
-(Next Action)  
-Type the accompanying message, "Locking in for Turing," and then send the message.
-
-(Grounded Action)
-```python
-agent.type(text="Locking in for Turing", enter=True)
-```
-[2025-12-13 22:30:19,395 INFO worker/198-MainProcess] REFLECTION: (Previous action verification)  
-The paste action succeeded; the Minion meme image is now embedded in the message input box.
-
-(Screenshot Analysis)  
-The Messages window shows the Minion image ready to be sent. The input field is visible beneath the image, but no text has been added yet.
-
-(Next Action)  
-Type the accompanying message, "Locking in for Turing," and then send the message.
+(Next Action)
+Type “lock in for Turing” and press Enter to send (along with the pasted image).
 
 (Grounded Action)
 ```python
-agent.type(text="Locking in for Turing", enter=True)
+agent.type("The iMessage text input field at the bottom of the ASU Soham Daga conversation", text="lock in for Turing", enter=True)
 ```
-[2025-12-13 22:30:26,787 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 7394.17ms
-Response success!
-[2025-12-13 22:30:26,787 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 7394.64ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:30:26,795 INFO profiler/152-MainProcess] ⏱️          Action_Type: 0.07ms | {'text_length': 18}
-[2025-12-13 22:30:26,795 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 7402.81ms
-[2025-12-13 22:30:26,796 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 7402.96ms
-[2025-12-13 22:30:26,796 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-The meme image is embedded in the message compose box, but the “Lock in for Turing” text has not been sent yet (no new outgoing message bubble is visible).
-
-(Screenshot Analysis)  
-Messages is open to “ASU Soham Daga.” The meme image is sitting in the input field ready to send, and the text cursor is active in the compose area.
-
-(Next Action)  
-Send the meme with the accompanying text by typing the message and pressing Enter (which will send).
-
-(Grounded Action)
-```python
-agent.type(text="lock in for Turing", enter=True)
-```
-[2025-12-13 22:30:26,799 INFO profiler/152-MainProcess] ⏱️        Action_Type: 0.03ms | {'text_length': 18}
-[2025-12-13 22:30:26,800 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 3.92ms
-[2025-12-13 22:30:26,802 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 15970.20ms
+[2025-12-14 22:58:35,380 INFO grounding/308-MainProcess] ✨ Cache hit! Returning cached coordinates: [643, 806] (hits: 6, misses: 7)
+[2025-12-14 22:58:35,381 INFO profiler/152-MainProcess] ⏱️            Grounding_generate_coords: 0.82ms | {'element': 'The iMessage text input field at the bottom of the ASU Soham Daga conversation'}
+[2025-12-14 22:58:35,381 INFO profiler/152-MainProcess] ⏱️          Type_Grounding: 1.13ms
+[2025-12-14 22:58:35,381 INFO profiler/152-MainProcess] ⏱️        Action_Type: 1.27ms | {'text_length': 18}
+[2025-12-14 22:58:35,381 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 5.76ms
+[2025-12-14 22:58:35,382 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 9478.69ms
 EXECUTING CODE: import pyautogui; 
 try:
     import pyperclip
@@ -497,67 +915,144 @@ except ImportError:
     subprocess.check_call([subprocess.sys.executable, '-m', 'pip', 'install', 'pyperclip'])
     import pyperclip
 
-pyautogui.write('lock in for Turing'); pyautogui.press('enter'); 
-[2025-12-13 22:30:28,456 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 653.26ms
-[2025-12-13 22:30:29,458 INFO profiler/152-MainProcess] ⏱️  Step_10: 19076.27ms
-[2025-12-13 22:30:29,956 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 496.89ms
+pyautogui.click(643, 806); pyautogui.write('lock in for Turing'); pyautogui.press('enter'); 
+[2025-12-14 22:58:37,160 INFO profiler/152-MainProcess] ⏱️    Code_Execution: 776.71ms
+[2025-12-14 22:58:38,161 INFO profiler/152-MainProcess] ⏱️  Step_9: 12480.14ms
+[2025-12-14 22:58:38,352 INFO profiler/152-MainProcess] ⏱️    Screenshot_Capture: 189.90ms
 
-🔄 Step 11/15: Getting next action from agent...
-[2025-12-13 22:30:29,962 INFO worker/200-MainProcess] REFLECTION SKIPPED (turn 10, frequency 3)
-[2025-12-13 22:30:36,489 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 6527.39ms
+🔄 Step 10/15: Getting next action from agent...
+[2025-12-14 22:58:38,354 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_1: 0.19ms
+Attempt 1 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:39,360 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_2: 0.23ms
+Attempt 2 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:40,366 INFO profiler/152-MainProcess] ⏱️          LLM_Attempt_3: 0.30ms
+Attempt 3 failed: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+Max retries reached. Handling failure.
+[2025-12-14 22:58:40,367 WARNING common_utils/84-MainProcess] LLM call failed after 3 attempts. Last error: ❌ Cerebras models do NOT support vision/image inputs!
+   
+   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.
+   
+   Solutions:
+   1. Use Cerebras for reflection model only (text-only tasks)
+   2. Use a vision-capable model for main tasks:
+      --provider openai --model gpt-4o
+      --provider anthropic --model claude-3-5-sonnet-20241022
+   
+   Current models that support vision:
+   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+   - Google: gemini-1.5-pro, gemini-1.5-flash
+[2025-12-14 22:58:40,368 INFO profiler/152-MainProcess] ⏱️        LLM_Call_with_Retries: 2013.54ms | {'model': 'qwen-3-32b', 'temperature': None, 'attempts': 3, 'success': False, 'retries': 2}
+[2025-12-14 22:58:40,368 INFO profiler/152-MainProcess] ⏱️      API_Call_Reflection_LLM: 2013.92ms
+[2025-12-14 22:58:40,368 INFO worker/197-MainProcess] REFLECTION THOUGHTS: 
+[2025-12-14 22:58:40,369 INFO worker/198-MainProcess] REFLECTION: 
+[2025-12-14 22:58:45,322 INFO profiler/152-MainProcess] ⏱️            LLM_Attempt_1: 4951.57ms
 Response success!
-[2025-12-13 22:30:36,489 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 6527.85ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
-[2025-12-13 22:30:36,494 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 6532.54ms
-[2025-12-13 22:30:36,494 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 6532.72ms
-[2025-12-13 22:30:36,494 INFO worker/382-MainProcess] PLAN:
- (Previous action verification)  
-Successful: the Minions meme appears in the chat thread, and a blue outgoing message bubble “lock in for Turing” is visible, indicating it was sent to ASU Soham Daga.
+[2025-12-14 22:58:45,323 INFO profiler/152-MainProcess] ⏱️          LLM_Call_with_Retries: 4952.17ms | {'model': 'gpt-5.2-2025-12-11', 'temperature': None, 'attempts': 1, 'success': True, 'retries': 0}
+[2025-12-14 22:58:45,328 INFO profiler/152-MainProcess] ⏱️        LLM_Call_Formatted: 4957.44ms
+[2025-12-14 22:58:45,328 INFO profiler/152-MainProcess] ⏱️      Planning_Phase: 4957.86ms
+[2025-12-14 22:58:45,328 INFO worker/387-MainProcess] PLAN:
+ (Previous action verification)
+The message was successfully sent: the minion meme image appears in the conversation and the text “lock in for Turing” shows as a sent blue bubble.
 
-(Screenshot Analysis)  
-Messages is open with the ASU Soham Daga conversation selected. The sent image and text are visible at the bottom of the thread.
+(Screenshot Analysis)
+Messages is open on the ASU Soham Daga thread, showing the newly sent image and text. The task requirements have been completed.
 
-(Next Action)  
-Task is complete (meme + message sent).
+(Next Action)
+Finish the task.
 
 (Grounded Action)
 ```python
 agent.done()
 ```
-[2025-12-13 22:30:36,505 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 10.58ms
-[2025-12-13 22:30:36,505 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 6549.95ms
+[2025-12-14 22:58:45,332 INFO profiler/152-MainProcess] ⏱️      Grounding_Phase: 3.17ms
+[2025-12-14 22:58:45,333 INFO profiler/152-MainProcess] ⏱️    Agent_Prediction: 6980.72ms
 button returned:OK
-[2025-12-13 22:30:42,418 INFO profiler/152-MainProcess] ⏱️  Step_11: 12961.73ms
+[2025-12-14 22:58:47,984 INFO profiler/152-MainProcess] ⏱️  Step_10: 9822.54ms
+
+====================================================================================================
+GROUNDING CACHE STATISTICS
+====================================================================================================
+Cache Hits:       6
+Cache Misses:     7
+Total Calls:      13
+Hit Rate:         46.2%
+Est. Time Saved:  ~7.8s
+====================================================================================================
+
 
 ====================================================================================================
 EXECUTION PROFILING SUMMARY
 ====================================================================================================
 Operation                                   Count   Total (ms)     Avg (ms)     Min (ms)     Max (ms)
 ----------------------------------------------------------------------------------------------------
-Agent_Prediction                               11     94123.45      8556.68      3213.17     15970.20
-LLM_Call_with_Retries                          20     93982.59      4699.13       974.00      8558.47
-LLM_Attempt_1                                  20     93975.77      4698.79       973.75      8558.10
-Planning_Phase                                 11     72544.88      6594.99      3210.36      9917.63
-LLM_Call_Formatted                             11     72543.21      6594.84      3210.30      9917.53
-Step_10                                         1     19076.27     19076.27     19076.27     19076.27
-API_Call_Reflection_LLM                         3     18455.60      6151.87      4610.65      8558.65
-Step_7                                          1     16810.64     16810.64     16810.64     16810.64
-Step_6                                          1     13450.36     13450.36     13450.36     13450.36
-Step_11                                         1     12961.73     12961.73     12961.73     12961.73
-Step_4                                          1     12782.31     12782.31     12782.31     12782.31
-Step_8                                          1     12177.93     12177.93     12177.93     12177.93
-Step_1                                          1     11718.12     11718.12     11718.12     11718.12
-Step_5                                          1     11262.68     11262.68     11262.68     11262.68
-Code_Execution                                 10     10297.09      1029.71       115.36      3794.01
-Step_9                                          1     10097.20     10097.20     10097.20     10097.20
-Step_2                                          1      7961.63      7961.63      7961.63      7961.63
-Action_Click                                    6      7907.44      1317.91       975.87      1844.31
-Click_Grounding                                 6      7905.97      1317.66       975.60      1844.05
-Grounding_generate_coords                       6      7904.48      1317.41       975.36      1843.77
-API_Call_Grounding_Model                        6      7897.69      1316.28       974.14      1842.63
-Step_3                                          1      6624.76      6624.76      6624.76      6624.76
-Screenshot_Capture                             11      4547.27       413.39       326.84       496.89
-Grounding_Phase                                11      3088.63       280.78         1.23      1073.22
-Action_Type                                     6         0.25         0.04         0.01         0.08
+Agent_Prediction                               10     75368.02      7536.80      3857.44      9478.69
+LLM_Call_with_Retries                          25     75229.65      3009.19      1081.71      6314.60
+Planning_Phase                                 10     57140.99      5714.10      3851.58      7458.66
+LLM_Call_Formatted                             10     57139.11      5713.91      3851.41      7458.50
+LLM_Attempt_1                                  25     57111.50      2284.46         0.03      6314.47
+API_Call_Reflection_LLM                         9     18137.72      2015.30      2010.32      2035.60
+Step_6                                          1     13051.85     13051.85     13051.85     13051.85
+Step_9                                          1     12480.14     12480.14     12480.14     12480.14
+Step_2                                          1     11262.70     11262.70     11262.70     11262.70
+Step_4                                          1     11163.86     11163.86     11163.86     11163.86
+Step_7                                          1     11139.57     11139.57     11139.57     11139.57
+Code_Execution                                  9     10534.50      1170.50       118.30      3817.22
+Step_5                                          1     10277.67     10277.67     10277.67     10277.67
+Step_8                                          1      9999.08      9999.08      9999.08      9999.08
+Step_1                                          1      9980.38      9980.38      9980.38      9980.38
+Step_10                                         1      9822.54      9822.54      9822.54      9822.54
+Step_3                                          1      9594.76      9594.76      9594.76      9594.76
+Grounding_generate_coords                      12      7452.61       621.05         0.28      1570.18
+API_Call_Grounding_Model                        6      7438.62      1239.77      1081.85      1568.36
+Action_Type                                     6      3799.35       633.23         0.69      1570.76
+Type_Grounding                                  6      3798.29       633.05         0.56      1570.54
+Action_Click                                    6      3659.14       609.86         0.79      1264.58
+Click_Grounding                                 6      3657.69       609.62         0.69      1264.33
+Screenshot_Capture                             10      2173.54       217.35       182.64       289.05
+Grounding_Phase                                10        48.08         4.81         0.82        16.06
+LLM_Attempt_3                                   9         1.87         0.21         0.09         0.30
+LLM_Attempt_2                                   9         1.81         0.20         0.12         0.26
 ====================================================================================================
-Total Execution Time: 134923.65ms (134.92s)
+Total Execution Time: 108772.55ms (108.77s)
 ====================================================================================================
+Would you like to provide another query? (y/n): 
