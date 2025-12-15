@@ -488,3 +488,101 @@ class LMMEngineParasail(LMMEngine):
             .choices[0]
             .message.content
         )
+
+
+class LMMEngineCerebras(LMMEngine):
+    def __init__(
+        self,
+        base_url=None,
+        api_key=None,
+        model=None,
+        rate_limit=-1,
+        temperature=None,
+        **kwargs,
+    ):
+        import logging
+        self.logger = logging.getLogger("desktopenv.agent")
+
+        assert model is not None, "model must be provided"
+        self.model = model
+        # Default to Cerebras API endpoint if not specified
+        self.base_url = base_url if base_url else "https://api.cerebras.ai/v1"
+        self.api_key = api_key
+        self.request_interval = 0 if rate_limit == -1 else 60.0 / rate_limit
+        self.llm_client = None
+        self.temperature = temperature
+
+        self.logger.info(f"🧠 Initialized Cerebras engine: model={self.model}, base_url={self.base_url}")
+
+    @backoff.on_exception(
+        backoff.expo, (APIConnectionError, APIError, RateLimitError), max_time=60
+    )
+    def generate(self, messages, temperature=0.0, max_new_tokens=None, **kwargs):
+        # Check for Cerebras API key first, then fall back to OpenAI key for compatibility
+        api_key = self.api_key or os.getenv("CEREBRAS_API_KEY") or os.getenv("OPENAI_API_KEY")
+
+        if not api_key:
+            raise ValueError(
+                "❌ Cerebras API key is required but not found!\n"
+                "   Please provide it via:\n"
+                "   1. Command line: --model_api_key YOUR_KEY\n"
+                "   2. Environment: export CEREBRAS_API_KEY=YOUR_KEY\n"
+                "   \n"
+                "   Get your key at: https://inference.cerebras.ai/"
+            )
+
+        if not self.llm_client:
+            self.llm_client = OpenAI(
+                base_url=self.base_url,
+                api_key=api_key,
+            )
+
+        # Check if request contains images (vision not supported)
+        has_images = False
+        for msg in messages:
+            if isinstance(msg.get("content"), list):
+                for item in msg["content"]:
+                    if isinstance(item, dict) and item.get("type") == "image_url":
+                        has_images = True
+                        break
+
+        if has_images:
+            raise ValueError(
+                "❌ Cerebras models do NOT support vision/image inputs!\n"
+                "   \n"
+                "   ⚠️  IMPORTANT: Agent-S is a GUI agent that requires vision to process screenshots.\n"
+                "   \n"
+                "   Solutions:\n"
+                "   1. Use Cerebras for reflection model only (text-only tasks)\n"
+                "   2. Use a vision-capable model for main tasks:\n"
+                "      --provider openai --model gpt-4o\n"
+                "      --provider anthropic --model claude-3-5-sonnet-20241022\n"
+                "   \n"
+                "   Current models that support vision:\n"
+                "   - OpenAI: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07\n"
+                "   - Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229\n"
+                "   - Google: gemini-1.5-pro, gemini-1.5-flash"
+            )
+
+        # Log request details
+        self.logger.debug(f"📤 Cerebras API request: model={self.model}, messages={len(messages)}, temp={temperature}")
+
+        try:
+            response = self.llm_client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=(
+                    temperature if self.temperature is None else self.temperature
+                ),
+                **kwargs,
+            )
+
+            self.logger.debug(f"📥 Cerebras API response: {len(response.choices[0].message.content)} chars")
+            return response.choices[0].message.content
+
+        except Exception as e:
+            self.logger.error(f"❌ Cerebras API error: {e}")
+            self.logger.error(f"   Model: {self.model}")
+            self.logger.error(f"   Base URL: {self.base_url}")
+            self.logger.error(f"   Message count: {len(messages)}")
+            raise

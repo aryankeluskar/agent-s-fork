@@ -5,6 +5,7 @@ import numpy as np
 from gui_agents.s3.core.engine import (
     LMMEngineAnthropic,
     LMMEngineAzureOpenAI,
+    LMMEngineCerebras,
     LMMEngineHuggingFace,
     LMMEngineOpenAI,
     LMMEngineOpenRouter,
@@ -25,6 +26,8 @@ class LMMAgent:
                     self.engine = LMMEngineAnthropic(**engine_params)
                 elif engine_type == "azure":
                     self.engine = LMMEngineAzureOpenAI(**engine_params)
+                elif engine_type == "cerebras":
+                    self.engine = LMMEngineCerebras(**engine_params)
                 elif engine_type == "vllm":
                     self.engine = LMMEnginevLLM(**engine_params)
                 elif engine_type == "huggingface":
@@ -125,6 +128,7 @@ class LMMAgent:
             (
                 LMMEngineOpenAI,
                 LMMEngineAzureOpenAI,
+                LMMEngineCerebras,
                 LMMEngineHuggingFace,
                 LMMEngineGemini,
                 LMMEngineOpenRouter,

@@ -271,7 +271,7 @@ def main():
         "--provider",
         type=str,
         default="openai",
-        help="Specify the provider to use (e.g., openai, anthropic, etc.)",
+        help="Specify the provider to use (e.g., openai, anthropic, etc.). IMPORTANT: Must support vision/multimodal for GUI agents.",
     )
     parser.add_argument(
         "--model",
@@ -366,14 +366,14 @@ def main():
     parser.add_argument(
         "--reflection_provider",
         type=str,
-        default=None,
-        help="Provider for reflection model (e.g., openai, anthropic). If not set, uses main model provider.",
+        default="cerebras",
+        help="Provider for reflection model (e.g., cerebras, openai, anthropic). Default: cerebras.",
     )
     parser.add_argument(
         "--reflection_model",
         type=str,
-        default=None,
-        help="Faster/cheaper model for reflection (e.g., gpt-4o-mini, claude-3-5-haiku-20241022). If not set, uses main model.",
+        default="qwen-3-32b",
+        help="Faster/cheaper model for reflection (e.g., qwen-3-32b for Cerebras, gpt-4o-mini for OpenAI, claude-3-5-haiku-20241022 for Anthropic). Default: qwen-3-32b.",
     )
     parser.add_argument(
         "--reflection_url",

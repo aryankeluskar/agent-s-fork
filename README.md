@@ -117,10 +117,13 @@ Don't forget to also `brew install tesseract`! Pytesseract requires this extra i
 #### Option 1: Environment Variables
 Add to your `.bashrc` (Linux) or `.zshrc` (MacOS):
 ```bash
-export OPENAI_API_KEY=<YOUR_API_KEY>
+export CEREBRAS_API_KEY=<YOUR_CEREBRAS_API_KEY>  # Recommended for fast inference
+export OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
 export ANTHROPIC_API_KEY=<YOUR_ANTHROPIC_API_KEY>
 export HF_TOKEN=<YOUR_HF_TOKEN>
 ```
+
+Get your Cerebras API key at: https://inference.cerebras.ai/
 
 #### Option 2: Python Script
 ```python
@@ -129,7 +132,18 @@ os.environ["OPENAI_API_KEY"] = "<YOUR_API_KEY>"
 ```
 
 ### Supported Models
-We support Azure OpenAI, Anthropic, Gemini, Open Router, and vLLM inference. See [models.md](models.md) for details.
+
+**⚠️ IMPORTANT: Agent-S is a GUI agent that requires VISION support to process screenshots!**
+
+**Vision-Capable Models** (for main model):
+- **OpenAI**: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
+- **Anthropic**: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+- **Google Gemini**: gemini-1.5-pro, gemini-1.5-flash
+
+**Text-Only Models** (for reflection model only):
+- **Cerebras**: qwen-3-32b, qwen-3-235b-a22b-instruct-2507, llama-3.3-70b (ultra-fast, cheap)
+
+See [models.md](models.md) for detailed configuration.
 
 ### Grounding Models (Required)
 For optimal performance, we recommend [UI-TARS-1.5-7B](https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B) hosted on Hugging Face Inference Endpoints or another provider. See [Hugging Face Inference Endpoints](https://huggingface.co/learn/cookbook/en/enterprise_dedicated_endpoints) for setup instructions.
@@ -137,8 +151,15 @@ For optimal performance, we recommend [UI-TARS-1.5-7B](https://huggingface.co/By
 ## 🚀 Usage
 
 
-> ⚡️ **Recommended Setup:**  
-> For the best configuration, we recommend using **OpenAI gpt-5-2025-08-07** as the main model, paired with **UI-TARS-1.5-7B** for grounding.  
+> ⚡️ **Recommended Setup:**
+> Agent-S is a **GUI agent that requires vision** to process screenshots.
+>
+> **Optimal Configuration:**
+> - **Main Model**: OpenAI `gpt-4o` (fast, vision-capable, reliable)
+> - **Reflection Model**: Cerebras `qwen-3-32b` (ultra-fast, text-only, cheap)
+> - **Grounding Model**: `UI-TARS-1.5-7B`
+>
+> This gives you the best balance of speed, quality, and cost!
 
 
 ### CLI
@@ -147,10 +168,13 @@ Note, this is running Agent S3, our improved agent, without bBoN.
 
 Run Agent S3 with the required parameters:
 
+**Recommended (OpenAI + Cerebras for optimal speed & cost):**
 ```bash
 agent_s \
     --provider openai \
-    --model gpt-5-2025-08-07 \
+    --model gpt-4o \
+    --reflection_provider cerebras \
+    --reflection_model qwen-3-32b \
     --ground_provider huggingface \
     --ground_url http://localhost:8080 \
     --ground_model ui-tars-1.5-7b \
@@ -158,13 +182,34 @@ agent_s \
     --grounding_height 1080
 ```
 
+This configuration uses:
+- **Main model**: `gpt-4o` on OpenAI (vision-capable, processes screenshots)
+- **Reflection model**: `qwen-3-32b` on Cerebras (ultra-fast, text-only, cheap)
+- **Grounding model**: `ui-tars-1.5-7b` for UI element detection
+
+> 💡 **Why this setup?** Agent-S needs vision to see your screen. Cerebras models are text-only, but perfect for fast reflection tasks!
+
+**Alternative (Anthropic):**
+```bash
+agent_s \
+    --provider anthropic \
+    --model claude-3-5-sonnet-20241022 \
+    --ground_provider huggingface \
+    --ground_url http://localhost:8080 \
+    --ground_model ui-tars-1.5-7b \
+    --grounding_width 1920 \
+    --grounding_height 1080
+```
+
+> ⚠️ **Important**: The main model MUST support vision/multimodal inputs to process screenshots.
+
 #### Local Coding Environment (Optional)
 For tasks that require code execution (e.g., data processing, file manipulation, system automation), you can enable the local coding environment:
 
 ```bash
 agent_s \
-    --provider openai \
-    --model gpt-5-2025-08-07 \
+    --provider cerebras \
+    --model qwen-3-235b-a22b-instruct-2507 \
     --ground_provider huggingface \
     --ground_url http://localhost:8080 \
     --ground_model ui-tars-1.5-7b \
@@ -176,8 +221,8 @@ agent_s \
 ⚠️ **WARNING**: The local coding environment executes arbitrary Python and Bash code locally on your machine. Only use this feature in trusted environments and with trusted inputs.
 
 #### Required Parameters
-- **`--provider`**: Main generation model provider (e.g., openai, anthropic, etc.) - Default: "openai"
-- **`--model`**: Main generation model name (e.g., gpt-5-2025-08-07) - Default: "gpt-5-2025-08-07"
+- **`--provider`**: Main model provider - **MUST support vision** (e.g., openai, anthropic, gemini) - Default: "openai"
+- **`--model`**: Main model name - **MUST support vision** (e.g., gpt-4o, claude-3-5-sonnet-20241022) - Default: "gpt-4o"
 - **`--ground_provider`**: The provider for the grounding model - **Required**
 - **`--ground_url`**: The URL of the grounding model - **Required**
 - **`--ground_model`**: The model name for the grounding model - **Required**
@@ -185,6 +230,8 @@ agent_s \
 - **`--grounding_height`**: Height of the output coordinate resolution from the grounding model - **Required**
 
 #### Optional Parameters
+- **`--reflection_provider`**: Provider for reflection model - Default: "cerebras"
+- **`--reflection_model`**: Faster model for reflection (e.g., qwen-3-32b for Cerebras, gpt-4o-mini for OpenAI) - Default: "qwen-3-32b"
 - **`--model_temperature`**: The temperature to fix all model calls to (necessary to set to 1.0 for models like o3 but can be left blank for other models)
 
 #### Grounding Model Dimensions
