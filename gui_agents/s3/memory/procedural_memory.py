@@ -117,6 +117,10 @@ class PROCEDURAL_MEMORY:
         9. Generate agent.done() as your grounded action when your believe the task is fully complete.
         10. Do not use the "command" + "tab" hotkey on MacOS.
         11. Prefer hotkeys and application features over clicking on text elements when possible. Highlighting text is fine.
+
+        CRITICAL: You MUST respond with EXACTLY ONE (Previous action verification), ONE (Screenshot Analysis), ONE (Next Action), and ONE (Grounded Action) section.
+        DO NOT generate multiple future steps or multiple (Grounded Action) blocks. Only return the immediate next action to take RIGHT NOW.
+        After you execute one action, you will receive a new screenshot and can then decide the next action. DO NOT plan ahead multiple steps.
         """
         )
 

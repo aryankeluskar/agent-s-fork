@@ -201,13 +201,18 @@ def run_agent(agent, instruction: str, scaled_width: int, scaled_height: int, us
                 info, code = agent.predict(instruction=instruction, observation=obs)
 
             if "done" in code[0].lower() or "fail" in code[0].lower():
+                # Log completion for debugging
+                logger.info(
+                    f"Agent completed task on step {step + 1}. Code: {code[0]}"
+                )
+
                 if platform.system() == "Darwin":
                     os.system(
-                        f'osascript -e \'display dialog "Task Completed" with title "OpenACI Agent" buttons "OK" default button "OK"\''
+                        'osascript -e \'display dialog "Task Completed" with title "OpenACI Agent" buttons "OK" default button "OK"\''
                     )
                 elif platform.system() == "Linux":
                     os.system(
-                        f'zenity --info --title="OpenACI Agent" --text="Task Completed" --width=200 --height=100'
+                        'zenity --info --title="OpenACI Agent" --text="Task Completed" --width=200 --height=100'
                     )
 
                 break
@@ -467,7 +472,7 @@ def main():
     print(f"🎯 Grounding model config: {args.grounding_width}x{args.grounding_height}")
 
     if scaled_width != screen_width or scaled_height != screen_height:
-        print(f"⚠️  Screenshots will be scaled down from screen size")
+        print("⚠️  Screenshots will be scaled down from screen size")
 
     print("📡 Testing grounding model connectivity...")
     try:

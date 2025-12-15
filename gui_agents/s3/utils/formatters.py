@@ -1,5 +1,6 @@
 """This file contains various formatting checks used to reprompt an agent for correctly formatted responses."""
 
+import re
 from gui_agents.s3.utils.common_utils import (
     extract_agent_functions,
     parse_code_from_string,
@@ -7,11 +8,27 @@ from gui_agents.s3.utils.common_utils import (
     split_thinking_response,
 )
 
-single_action_check = (
-    lambda response: len(extract_agent_functions(parse_code_from_string(response))) == 1
-)
+def single_action_check(response):
+    """Check that there's exactly ONE code block with ONE agent function in the entire response.
+
+    This prevents the LLM from generating multiple future steps in a single response.
+    """
+    # Find ALL code blocks in the response
+    pattern = r"```(?:\w+\s+)?(.*?)```"
+    all_matches = re.findall(pattern, response, re.DOTALL)
+
+    # Reject if there's more than one code block
+    if len(all_matches) != 1:
+        return False
+
+    # Check that the single code block has exactly one agent function
+    code = all_matches[0]
+    agent_functions = extract_agent_functions(code)
+    return len(agent_functions) == 1
+
 single_action_error_msg = (
-    "Incorrect code: There must be a single agent action in the code response."
+    "Incorrect code: There must be exactly ONE code block with a single agent action. "
+    "Do not generate multiple future steps - only return the immediate next action."
 )
 SINGLE_ACTION_FORMATTER = lambda response: (
     single_action_check(response),
