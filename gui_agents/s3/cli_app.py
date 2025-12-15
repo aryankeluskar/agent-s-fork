@@ -152,7 +152,7 @@ def scale_screen_dimensions(width: int, height: int, max_dim_size: int):
     return safe_width, safe_height
 
 
-def run_agent(agent, instruction: str, scaled_width: int, scaled_height: int):
+def run_agent(agent, instruction: str, scaled_width: int, scaled_height: int, use_robotgo: bool = False):
     from gui_agents.s3.utils.profiler import profiler
 
     global paused
@@ -228,9 +228,15 @@ def run_agent(agent, instruction: str, scaled_width: int, scaled_height: int):
                 while paused:
                     time.sleep(0.1)
 
-                # Ask for permission before executing
+                # Execute code using robotgo or pyautogui
                 with profiler.profile("Code_Execution"):
-                    exec(code[0])
+                    if use_robotgo:
+                        from gui_agents.s3.utils.robotgo_executor import execute_robotgo_code
+                        success = execute_robotgo_code(code[0])
+                        if not success:
+                            logger.error("Failed to execute robotgo code")
+                    else:
+                        exec(code[0])
                 time.sleep(1.0)
 
                 # Update task and subtask trajectories
@@ -361,6 +367,12 @@ def main():
         default=False,
         help="Enable local coding environment for code execution (WARNING: Executes arbitrary code locally)",
     )
+    parser.add_argument(
+        "--use_robotgo",
+        action="store_true",
+        default=False,
+        help="Use Go robotgo executor instead of Python pyautogui (requires robotgo_executor binary)",
+    )
 
     # Reflection model config (optional - defaults to main model if not specified)
     parser.add_argument(
@@ -391,7 +403,11 @@ def main():
     args = parser.parse_args()
 
     # Re-scales screenshot size to ensure it fits in UI-TARS context limit
-    screen_width, screen_height = pyautogui.size()
+    if args.use_robotgo:
+        from gui_agents.s3.utils.robotgo_executor import get_screen_size
+        screen_width, screen_height = get_screen_size()
+    else:
+        screen_width, screen_height = pyautogui.size()
     scaled_width, scaled_height = scale_screen_dimensions(
         screen_width, screen_height, max_dim_size=2400
     )
@@ -456,7 +472,11 @@ def main():
     print("📡 Testing grounding model connectivity...")
     try:
         # Take a test screenshot for validation
-        test_screenshot = pyautogui.screenshot()
+        if args.use_robotgo:
+            # Still use pyautogui for screenshots (or could use mss)
+            test_screenshot = pyautogui.screenshot()
+        else:
+            test_screenshot = pyautogui.screenshot()
         test_screenshot = test_screenshot.resize((scaled_width, scaled_height), Image.LANCZOS)
         buffered = io.BytesIO()
         test_screenshot.save(buffered, format="PNG")
