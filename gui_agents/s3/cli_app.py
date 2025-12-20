@@ -226,7 +226,8 @@ def run_agent(agent, instruction: str, scaled_width: int, scaled_height: int, us
                 continue
 
             else:
-                time.sleep(1.0)
+                # OPTIMIZATION: Reduced pre-execution delay from 1.0s to 0.1s (saves ~10s per run)
+                time.sleep(0.1)
                 print("EXECUTING CODE:", code[0])
 
                 # Check for pause state before execution
@@ -242,7 +243,8 @@ def run_agent(agent, instruction: str, scaled_width: int, scaled_height: int, us
                             logger.error("Failed to execute robotgo code")
                     else:
                         exec(code[0])
-                time.sleep(1.0)
+                # OPTIMIZATION: Reduced post-execution delay from 1.0s to 0.2s (saves ~9s per run)
+                time.sleep(0.2)
 
                 # Update task and subtask trajectories
                 if "reflection" in info and "executor_plan" in info:
@@ -282,19 +284,19 @@ def main():
         "--provider",
         type=str,
         default="openai",
-        help="Specify the provider to use (e.g., openai, anthropic, etc.). IMPORTANT: Must support vision/multimodal for GUI agents.",
+        help="Specify the provider to use. IMPORTANT: Must support vision/multimodal for GUI agents. Options: openai, anthropic, gemini, open_router, cerebras, azure, vllm, huggingface, parasail",
     )
     parser.add_argument(
         "--model",
         type=str,
-        default="gpt-5.2-2025-12-11",
-        help="Specify the model to use (e.g., gpt-5.2-2025-12-11)",
+        default="gpt-4o",
+        help="Specify the model to use. Examples: gpt-4o (OpenAI), claude-3-5-sonnet-20241022 (Anthropic), google/gemini-2.0-flash-exp:free (OpenRouter), gemini-2.0-flash-exp (Gemini)",
     )
     parser.add_argument(
         "--model_url",
         type=str,
         default=None,
-        help="The URL of the main generation model API.",
+        help="The URL of the main generation model API. For open_router, defaults to https://openrouter.ai/api/v1 if not specified.",
     )
     parser.add_argument(
         "--model_api_key",

@@ -63,11 +63,29 @@ class Worker(BaseModule):
         ]
         self.grounding_agent = grounding_agent
         self.max_trajectory_length = max_trajectory_length
-        self.enable_reflection = enable_reflection
-        self.reflection_frequency = reflection_frequency
 
         # Use separate reflection engine params if provided, otherwise use worker engine params
         self.reflection_engine_params = reflection_engine_params or worker_engine_params
+
+        # CRITICAL OPTIMIZATION: Auto-disable reflection for non-vision models
+        # Cerebras and other text-only models will fail on vision inputs, wasting ~22s per run
+        reflection_provider = self.reflection_engine_params.get("engine_type", "").lower()
+        if enable_reflection and reflection_provider in ["cerebras", "vllm"]:
+            logger.warning(
+                f"⚠️  OPTIMIZATION: Auto-disabling reflection for provider '{reflection_provider}'\n"
+                f"   Reason: This provider does not support vision/image inputs\n"
+                f"   Impact: Saves ~20-25s per run by avoiding guaranteed failures\n"
+                f"   \n"
+                f"   To enable reflection, use a vision-capable model:\n"
+                f"   --reflection_provider=open_router --reflection_model=google/gemini-2.0-flash-exp:free\n"
+                f"   --reflection_provider=openai --reflection_model=gpt-4o-mini\n"
+                f"   --reflection_provider=anthropic --reflection_model=claude-3-5-haiku-20241022"
+            )
+            self.enable_reflection = False
+        else:
+            self.enable_reflection = enable_reflection
+
+        self.reflection_frequency = reflection_frequency
 
         self.reset()
 

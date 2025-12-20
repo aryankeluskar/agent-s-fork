@@ -240,13 +240,16 @@ class LMMEngineOpenRouter(LMMEngine):
         api_key = self.api_key or os.getenv("OPENROUTER_API_KEY")
         if api_key is None:
             raise ValueError(
-                "An API Key needs to be provided in either the api_key parameter or as an environment variable named OPENROUTER_API_KEY"
+                "❌ OpenRouter API key is required but not found!\n"
+                "   Get a FREE API key at https://openrouter.ai/\n"
+                "   Then set it using one of these methods:\n"
+                "   1. Command line: --model_api_key YOUR_KEY\n"
+                "   2. Environment: export OPENROUTER_API_KEY=YOUR_KEY\n"
+                "   3. .env file: export OPENROUTER_API_KEY=\"YOUR_KEY\"\n"
             )
-        base_url = self.base_url or os.getenv("OPEN_ROUTER_ENDPOINT_URL")
-        if base_url is None:
-            raise ValueError(
-                "An endpoint URL needs to be provided in either the endpoint_url parameter or as an environment variable named OPEN_ROUTER_ENDPOINT_URL"
-            )
+        # Default to OpenRouter API endpoint if not provided
+        base_url = self.base_url or os.getenv("OPEN_ROUTER_ENDPOINT_URL", "https://openrouter.ai/api/v1")
+
         if not self.llm_client:
             self.llm_client = OpenAI(base_url=base_url, api_key=api_key)
         # Use self.temperature if set, otherwise use the temperature argument

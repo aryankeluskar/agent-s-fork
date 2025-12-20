@@ -538,11 +538,11 @@ class OSWorldACI(ACI):
             app_code:str the code name of the application to switch to from the provided list of open applications
         """
         if self.platform == "darwin":
-            return f"import pyautogui; import time; pyautogui.hotkey('command', 'space', interval=0.5); pyautogui.typewrite({repr(app_code)}); pyautogui.press('enter'); time.sleep(1.0)"
+            return f"import pyautogui; import time; pyautogui.hotkey('command', 'space', interval=0.5); pyautogui.typewrite({repr(app_code)}); pyautogui.press('enter'); time.sleep(0.2)"
         elif self.platform == "linux":
             return UBUNTU_APP_SETUP.replace("APP_NAME", app_code)
         elif self.platform == "windows":
-            return f"import pyautogui; import time; pyautogui.hotkey('win', 'd', interval=0.5); pyautogui.typewrite({repr(app_code)}); pyautogui.press('enter'); time.sleep(1.0)"
+            return f"import pyautogui; import time; pyautogui.hotkey('win', 'd', interval=0.5); pyautogui.typewrite({repr(app_code)}); pyautogui.press('enter'); time.sleep(0.2)"
         else:
             assert (
                 False
@@ -555,14 +555,14 @@ class OSWorldACI(ACI):
             app_or_filename:str, the name of the application or filename to open
         """
         if self.platform == "linux":
-            return f"import pyautogui; pyautogui.hotkey('win'); time.sleep(0.5); pyautogui.write({repr(app_or_filename)}); time.sleep(1.0); pyautogui.hotkey('enter'); time.sleep(0.5)"
+            return f"import pyautogui; pyautogui.hotkey('win'); time.sleep(0.5); pyautogui.write({repr(app_or_filename)}); time.sleep(0.2); pyautogui.hotkey('enter'); time.sleep(0.5)"
         elif self.platform == "darwin":
-            return f"import pyautogui; import time; pyautogui.hotkey('command', 'space', interval=0.5); pyautogui.typewrite({repr(app_or_filename)}); pyautogui.press('enter'); time.sleep(1.0)"
+            return f"import pyautogui; import time; pyautogui.hotkey('command', 'space', interval=0.5); pyautogui.typewrite({repr(app_or_filename)}); pyautogui.press('enter'); time.sleep(0.2)"
         elif self.platform == "windows":
             return (
                 "import pyautogui; import time; "
                 "pyautogui.hotkey('win'); time.sleep(0.5); "
-                f"pyautogui.write({repr(app_or_filename)}); time.sleep(1.0); "
+                f"pyautogui.write({repr(app_or_filename)}); time.sleep(0.2); "
                 "pyautogui.press('enter'); time.sleep(0.5)"
             )
         else:

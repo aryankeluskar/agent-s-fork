@@ -201,6 +201,47 @@ agent_s \
     --grounding_height 1080
 ```
 
+**Alternative (OpenRouter - Free & Cost-Effective!):**
+```bash
+# Set your OpenRouter API key (get one at https://openrouter.ai/)
+export OPENROUTER_API_KEY="your-api-key-here"
+
+# Run with FREE Gemini 2.0 Flash model via OpenRouter
+agent_s \
+    --provider open_router \
+    --model google/gemini-2.0-flash-exp:free \
+    --model_url https://openrouter.ai/api/v1 \
+    --ground_provider huggingface \
+    --ground_url http://localhost:8080 \
+    --ground_model ui-tars-1.5-7b \
+    --grounding_width 1920 \
+    --grounding_height 1080
+
+# OR use paid Gemini 2.0 Flash for higher rate limits ($0.125/M input, $0.5/M output)
+agent_s \
+    --provider open_router \
+    --model google/gemini-2.0-flash-001 \
+    --model_url https://openrouter.ai/api/v1 \
+    --ground_provider huggingface \
+    --ground_url http://localhost:8080 \
+    --ground_model ui-tars-1.5-7b \
+    --grounding_width 1920 \
+    --grounding_height 1080
+
+# OR use GPT-4o via OpenRouter ($2.50/M input, $10/M output)
+agent_s \
+    --provider open_router \
+    --model openai/gpt-4o \
+    --model_url https://openrouter.ai/api/v1 \
+    --ground_provider huggingface \
+    --ground_url http://localhost:8080 \
+    --ground_model ui-tars-1.5-7b \
+    --grounding_width 1920 \
+    --grounding_height 1080
+```
+
+> 💡 **Why OpenRouter?** Access 200+ AI models through one API, including FREE options like Gemini 2.0 Flash Experimental with 1M+ context window and full vision support!
+
 > ⚠️ **Important**: The main model MUST support vision/multimodal inputs to process screenshots.
 
 #### Local Coding Environment (Optional)
