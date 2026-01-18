@@ -2,21 +2,31 @@
 """
 Voice Assistant with Transparent Overlay UI
 Features wake word detection and real-time transcription display
+Uses Wispr Flow API for high-quality speech transcription
 """
 
 import sys
 import os
 import threading
 import time
+import asyncio
+import base64
+import json
+import io
+import wave
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import pyaudio
 import numpy as np
 from openwakeword.model import Model
-import whisper
+import websockets
 from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QObject, QRect, QUrl, QPointF
 from PyQt5.QtGui import QPainter, QColor, QFont, QPen, QLinearGradient
+
+# Wispr Flow API configuration
+WISPR_API_KEY = os.environ.get("WISPR_API_KEY")
+WISPR_WS_URL = f"wss://platform-api.wisprflow.ai/api/v1/dash/ws?api_key=Bearer%20{WISPR_API_KEY}"
 
 
 class TransparentWebView(QWebEngineView):
@@ -39,6 +49,193 @@ class TranscriptionSignals(QObject):
     hide_overlay = pyqtSignal()
     update_text = pyqtSignal(str)
     update_volume = pyqtSignal(float)
+
+
+class WisprTranscriber:
+    """
+    Handles speech transcription using Wispr Flow WebSocket API.
+    Provides high-quality dictation with context awareness.
+    """
+
+    def __init__(self, api_key: str = None):
+        self.api_key = api_key or WISPR_API_KEY
+        self.ws_url = f"wss://platform-api.wisprflow.ai/api/v1/dash/ws?api_key=Bearer%20{self.api_key}"
+        self.sample_rate = 16000
+        self.channels = 1
+        self.sample_width = 2  # 16-bit audio
+
+    def _create_wav_chunk(self, pcm_data: bytes) -> str:
+        """
+        Convert raw PCM data to WAV format and return as base64.
+        Wispr expects 16kHz, 16-bit, mono WAV audio.
+        """
+        buffer = io.BytesIO()
+        with wave.open(buffer, 'wb') as wav_file:
+            wav_file.setnchannels(self.channels)
+            wav_file.setsampwidth(self.sample_width)
+            wav_file.setframerate(self.sample_rate)
+            wav_file.writeframes(pcm_data)
+        
+        buffer.seek(0)
+        return base64.b64encode(buffer.read()).decode('utf-8')
+
+    def _calculate_volume(self, pcm_data: bytes) -> float:
+        """Calculate normalized volume level from PCM data."""
+        if not pcm_data:
+            return 0.0
+        audio_array = np.frombuffer(pcm_data, dtype=np.int16).astype(np.float32)
+        rms = np.sqrt(np.mean(audio_array ** 2))
+        # Normalize to 0-1 range
+        return min(1.0, rms / 3000)
+
+    async def transcribe_audio(self, audio_frames: list, on_partial: callable = None) -> str:
+        """
+        Transcribe audio frames using Wispr Flow WebSocket API.
+        
+        Args:
+            audio_frames: List of raw PCM audio bytes (16kHz, 16-bit, mono)
+            on_partial: Optional callback for partial transcription updates
+            
+        Returns:
+            Final transcription text
+        """
+        if not audio_frames:
+            return ""
+
+        # Combine all frames into single audio buffer
+        combined_audio = b''.join(audio_frames)
+        
+        try:
+            async with websockets.connect(self.ws_url) as ws:
+                # Send auth message with context
+                auth_message = {
+                    "type": "auth",
+                    "access_token": self.api_key,
+                    "language": ["en"],
+                    "context": {
+                        "app": {
+                            "name": "Voice Assistant",
+                            "type": "ai"
+                        },
+                        "dictionary_context": [
+                            "Jarvis", "Instagram", "YouTube", "Spotify",
+                            "Chrome", "Safari", "Firefox", "Gmail"
+                        ]
+                    }
+                }
+                await ws.send(json.dumps(auth_message))
+                
+                # Wait for auth confirmation
+                auth_response = await ws.recv()
+                auth_data = json.loads(auth_response)
+                
+                if auth_data.get("status") != "auth":
+                    print(f"Wispr auth failed: {auth_data}")
+                    return ""
+                
+                # Prepare audio packets - send in chunks for streaming
+                # Each packet should be ~1 second of audio
+                samples_per_packet = self.sample_rate  # 1 second
+                bytes_per_packet = samples_per_packet * self.sample_width
+                
+                packets = []
+                volumes = []
+                
+                for i in range(0, len(combined_audio), bytes_per_packet):
+                    chunk = combined_audio[i:i + bytes_per_packet]
+                    if len(chunk) > 0:
+                        wav_b64 = self._create_wav_chunk(chunk)
+                        packets.append(wav_b64)
+                        volumes.append(self._calculate_volume(chunk))
+                
+                if not packets:
+                    return ""
+                
+                # Send audio packets
+                append_message = {
+                    "type": "append",
+                    "position": 0,
+                    "audio_packets": {
+                        "packets": packets,
+                        "volumes": volumes,
+                        "packet_duration": 1.0,  # 1 second per packet
+                        "audio_encoding": "wav",
+                        "byte_encoding": "base64"
+                    }
+                }
+                await ws.send(json.dumps(append_message))
+                
+                # Send commit to signal end of audio
+                commit_message = {
+                    "type": "commit",
+                    "total_packets": len(packets)
+                }
+                await ws.send(json.dumps(commit_message))
+                
+                # Receive transcription results
+                final_text = ""
+                
+                while True:
+                    try:
+                        response = await asyncio.wait_for(ws.recv(), timeout=10.0)
+                        data = json.loads(response)
+                        
+                        if data.get("status") == "text":
+                            text = data.get("body", {}).get("text", "")
+                            is_final = data.get("final", False)
+                            
+                            if text:
+                                if on_partial and not is_final:
+                                    on_partial(text)
+                                final_text = text
+                            
+                            if is_final:
+                                break
+                                
+                        elif data.get("status") == "error":
+                            print(f"Wispr error: {data}")
+                            break
+                            
+                        elif data.get("status") == "info":
+                            # Acknowledgement messages, continue waiting
+                            continue
+                            
+                    except asyncio.TimeoutError:
+                        print("Wispr response timeout")
+                        break
+                
+                return final_text.strip()
+                
+        except websockets.exceptions.WebSocketException as e:
+            print(f"Wispr WebSocket error: {e}")
+            return ""
+        except Exception as e:
+            print(f"Wispr transcription error: {e}")
+            return ""
+
+    def transcribe_sync(self, audio_frames: list, on_partial: callable = None) -> str:
+        """
+        Synchronous wrapper for transcribe_audio.
+        Creates a new event loop if needed.
+        """
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                # If we're already in an async context, create a new thread
+                import concurrent.futures
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future = executor.submit(
+                        asyncio.run,
+                        self.transcribe_audio(audio_frames, on_partial)
+                    )
+                    return future.result(timeout=15)
+            else:
+                return loop.run_until_complete(
+                    self.transcribe_audio(audio_frames, on_partial)
+                )
+        except RuntimeError:
+            # No event loop, create one
+            return asyncio.run(self.transcribe_audio(audio_frames, on_partial))
 
 
 class TransparentOverlay(QWidget):
@@ -398,7 +595,9 @@ class VoiceAssistant:
 
         # Models
         self.oww_model = None
-        self.whisper_model = None
+        
+        # Wispr Flow transcriber (replaces local Whisper)
+        self.transcriber = WisprTranscriber()
 
         # Audio
         self.audio = pyaudio.PyAudio()
@@ -492,7 +691,7 @@ class VoiceAssistant:
         print(f"Input device set to index: {device_index}")
 
     def load_models(self):
-        """Load AI models"""
+        """Load AI models (wake word only, transcription uses Wispr Flow API)"""
         try:
             print("Loading wake word model...")
             self.oww_model = Model(
@@ -500,10 +699,7 @@ class VoiceAssistant:
                 inference_framework="onnx"
             )
 
-            print("Loading speech recognition model...")
-            self.whisper_model = whisper.load_model("base")
-            print("DEBUG: Whisper model loaded")
-
+            print("Transcription: Using Wispr Flow API")
             print("Models loaded successfully!")
             return True
         except Exception as e:
@@ -654,31 +850,10 @@ class VoiceAssistant:
                 print(f"Detection error: {e}")
                 continue
 
-    def transcribe_partial(self):
-        """Transcribe partial audio for real-time feedback"""
-        try:
-            # Convert current frames to numpy array
-            audio_data = b''.join(self.recorded_frames)
-            audio_array = np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
-
-            # Quick transcription with lower quality for speed
-            result = self.whisper_model.transcribe(
-                audio_array,
-                language="en",
-                fp16=False,
-                task="transcribe",
-                temperature=0.0,
-                best_of=1,
-                beam_size=1,
-                condition_on_previous_text=False
-            )
-            transcript = result["text"].strip()
-
-            if transcript:
-                self.overlay.signals.update_text.emit(transcript)
-
-        except Exception as e:
-            print(f"Partial transcription error: {e}")
+    def on_partial_transcription(self, text: str):
+        """Callback for partial transcription updates from Wispr Flow"""
+        if text:
+            self.overlay.signals.update_text.emit(text + "...")
 
     def trim_silence(self, frames):
         """Trim trailing silence from audio frames"""
@@ -697,11 +872,12 @@ class VoiceAssistant:
         return frames[:end_idx]
 
     def process_speech(self):
-        """Transcribe recorded speech"""
+        """Transcribe recorded speech using Wispr Flow API"""
         self.is_recording = False
 
         print("Processing speech...")
         self.overlay.signals.update_volume.emit(0)
+        self.overlay.signals.update_text.emit("Transcribing...")
 
         try:
             # Trim trailing silence for better transcription
@@ -712,22 +888,14 @@ class VoiceAssistant:
                 self.overlay.signals.update_text.emit("(no speech detected)")
                 return
 
-            # Convert to numpy array
-            audio_data = b''.join(trimmed_frames)
-            audio_array = np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
+            audio_duration = len(trimmed_frames) * self.CHUNK / self.RATE
+            print(f"Transcribing {len(trimmed_frames)} chunks ({audio_duration:.1f}s of audio)")
 
-            print(f"Transcribing {len(trimmed_frames)} chunks ({len(trimmed_frames) * self.CHUNK / self.RATE:.1f}s of audio)")
-
-            # Final transcription with higher quality
-            result = self.whisper_model.transcribe(
-                audio_array,
-                language="en",
-                fp16=False,
-                no_speech_threshold=0.6,  # Higher threshold to avoid hallucinations
-                logprob_threshold=-1.0,   # Filter low-confidence outputs
-                compression_ratio_threshold=2.4  # Filter repetitive hallucinations
+            # Use Wispr Flow for transcription
+            transcript = self.transcriber.transcribe_sync(
+                trimmed_frames,
+                on_partial=self.on_partial_transcription
             )
-            transcript = result["text"].strip()
 
             if transcript:
                 print(f"Final transcription: {transcript}")
@@ -737,7 +905,8 @@ class VoiceAssistant:
                 self.overlay.signals.update_text.emit("(no speech detected)")
 
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Transcription error: {e}")
+            self.overlay.signals.update_text.emit("(transcription failed)")
 
         finally:
             self.recorded_frames = []
