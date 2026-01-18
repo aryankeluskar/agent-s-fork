@@ -106,7 +106,7 @@ class LMMAgent:
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/png;base64,{base64_image}",
+                            "url": f"data:image/webp;base64,{base64_image}",
                             "detail": image_detail,
                         },
                     }
@@ -159,7 +159,7 @@ class LMMAgent:
                             {
                                 "type": "image_url",
                                 "image_url": {
-                                    "url": f"data:image/png;base64,{base64_image}",
+                                    "url": f"data:image/webp;base64,{base64_image}",
                                     "detail": image_detail,
                                 },
                             }
@@ -171,7 +171,7 @@ class LMMAgent:
                         {
                             "type": "image_url",
                             "image_url": {
-                                "url": f"data:image/png;base64,{base64_image}",
+                                "url": f"data:image/webp;base64,{base64_image}",
                                 "detail": image_detail,
                             },
                         }
@@ -211,7 +211,7 @@ class LMMAgent:
                                 "type": "image",
                                 "source": {
                                     "type": "base64",
-                                    "media_type": "image/png",
+                                    "media_type": "image/webp",
                                     "data": base64_image,
                                 },
                             }
@@ -224,7 +224,7 @@ class LMMAgent:
                             "type": "image",
                             "source": {
                                 "type": "base64",
-                                "media_type": "image/png",
+                                "media_type": "image/webp",
                                 "data": base64_image,
                             },
                         }
@@ -257,7 +257,7 @@ class LMMAgent:
                             {
                                 "type": "image_url",
                                 "image_url": {
-                                    "url": f"data:image;base64,{base64_image}"
+                                    "url": f"data:image/webp;base64,{base64_image}"
                                 },
                             }
                         )
@@ -267,7 +267,7 @@ class LMMAgent:
                     message["content"].append(
                         {
                             "type": "image_url",
-                            "image_url": {"url": f"data:image;base64,{base64_image}"},
+                            "image_url": {"url": f"data:image/webp;base64,{base64_image}"},
                         }
                     )
 
