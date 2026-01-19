@@ -90,7 +90,7 @@ import os
 os.environ["OPENROUTER_API_KEY"] = "<your_key>"
 ```
 
-Get your OpenRouter key at https://openrouter.ai/. They've got free models like Gemini 2.0 Flash if you want to try this without spending money. Perfect for testing.
+Get your OpenRouter key at https://openrouter.ai/. They've got free models like Gemini 2.0 Flash if you want to try out Agent_S3.
 
 ## 🚀 Usage
 

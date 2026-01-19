@@ -182,7 +182,7 @@ def analyze_recording(
     recording_path: Path,
     actions_path: Optional[Path] = None,
     api_key: Optional[str] = None,
-    model: str = "google/gemini-2.0-flash-001",
+    model: str = "google/gemini-3-flash-preview",
     recording_name: Optional[str] = None,
     max_images: int = 15,
 ) -> str:
@@ -350,8 +350,8 @@ Examples:
     parser.add_argument(
         "--model", "-m",
         type=str,
-        default="google/gemini-2.0-flash-001",
-        help="Model to use (default: google/gemini-2.0-flash-001)",
+        default="google/gemini-3-flash-preview",
+        help="Model to use (default: google/gemini-3-flash-preview)",
     )
     parser.add_argument(
         "--api-key", "-k",

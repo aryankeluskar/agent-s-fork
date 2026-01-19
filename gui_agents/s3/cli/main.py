@@ -74,6 +74,18 @@ def create_skills_parser(subparsers):
 
 def main():
     """Main entry point for Agent-S CLI."""
+    # Known subcommands
+    subcommands = {"run", "record", "voice", "skills"}
+    
+    # Check if first argument is a subcommand or if we need to default to 'run'
+    # This maintains backward compatibility: agent_s --provider openai ... 
+    # should work the same as: agent_s run --provider openai ...
+    if len(sys.argv) > 1:
+        first_arg = sys.argv[1]
+        # If first arg is not a subcommand and not -h/--help, insert 'run'
+        if first_arg not in subcommands and first_arg not in ["-h", "--help"]:
+            sys.argv.insert(1, "run")
+    
     # Create top-level parser
     parser = argparse.ArgumentParser(
         prog="agent_s",
@@ -97,35 +109,18 @@ Examples:
     )
     
     # Add subcommands
-    run_parser = create_run_parser(subparsers)
+    create_run_parser(subparsers)
     create_record_parser(subparsers)
     create_voice_parser(subparsers)
     create_skills_parser(subparsers)
     
     # Parse arguments
-    args, remaining = parser.parse_known_args()
+    args = parser.parse_args()
     
-    # Default to 'run' command if no subcommand given
-    # This maintains backward compatibility with existing usage
+    # If no command provided (just 'agent_s'), show help
     if args.command is None:
-        # Check if any run-specific arguments were provided
-        # Re-parse with run parser to handle default case
-        from .run import add_run_arguments
-        
-        # Create a new parser for run-only mode
-        run_only_parser = argparse.ArgumentParser(
-            prog="agent_s",
-            description="Agent-S: GUI Automation Agent",
-        )
-        add_run_arguments(run_only_parser)
-        
-        try:
-            args = run_only_parser.parse_args()
-            args.command = "run"
-        except SystemExit:
-            # If parsing fails, show main help
-            parser.print_help()
-            return 1
+        parser.print_help()
+        return 0
     
     # Dispatch to appropriate command handler
     if args.command == "run":

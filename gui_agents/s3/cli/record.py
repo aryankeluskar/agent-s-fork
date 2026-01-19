@@ -296,7 +296,7 @@ def add_record_arguments(parser):
     analyze_parser.add_argument(
         "--model",
         type=str,
-        default="google/gemini-2.0-flash-001",
+        default="google/gemini-3-flash-preview",
         help="Model to use for analysis",
     )
     analyze_parser.add_argument(

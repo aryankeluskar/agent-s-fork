@@ -5,6 +5,7 @@ Integrates the skills system into Agent-S procedural memory,
 providing skill-augmented prompts and context for task execution.
 """
 
+import logging
 import platform
 from typing import Optional, List
 
@@ -15,6 +16,8 @@ from gui_agents.s3.skills import (
     RetrievalResult,
     ComposedPlan,
 )
+
+logger = logging.getLogger("desktopenv.agent")
 
 
 class SkillMemory:
@@ -56,7 +59,17 @@ class SkillMemory:
     
     def has_skills(self) -> bool:
         """Check if any skills are indexed."""
-        return self.store.stats()["total_skills"] > 0
+        stats = self.store.stats()
+        total_skills = stats["total_skills"]
+        if total_skills > 0:
+            logger.info(
+                "📚 SKILL MEMORY: Found %d skill(s) in store at %s",
+                total_skills,
+                stats.get("store_path", "unknown")
+            )
+        else:
+            logger.info("📚 SKILL MEMORY: No skills indexed yet")
+        return total_skills > 0
     
     def get_relevant_skills(
         self,
@@ -76,11 +89,30 @@ class SkillMemory:
         if not self.has_skills():
             return []
         
-        return self.retriever.retrieve_with_steps(
+        logger.info(
+            "🔍 SKILL MEMORY: Searching for skills matching: '%s'",
+            task_description[:100]
+        )
+        
+        results = self.retriever.retrieve_with_steps(
             query=task_description,
             n_skills=n_results,
             n_steps_per_skill=5,
         )
+        
+        if results:
+            for i, result in enumerate(results, 1):
+                logger.info(
+                    "   📌 Match %d: '%s' (score: %.2f, reason: %s)",
+                    i,
+                    result.skill.name[:50],
+                    result.score,
+                    result.match_reason
+                )
+        else:
+            logger.info("   ⚠️  No matching skills found")
+        
+        return results
     
     def compose_plan(self, goal: str) -> Optional[ComposedPlan]:
         """
@@ -149,7 +181,14 @@ class SkillMemory:
             "but adapt to the specific task at hand."
         )
         
-        return "\n".join(parts)
+        context = "\n".join(parts)
+        logger.info(
+            "✅ SKILL MEMORY: Generated skill context (%d chars) with %d skill(s)",
+            len(context),
+            len(results)
+        )
+        
+        return context
     
     def get_user_context_prompt(self, filter_app: Optional[str] = None) -> str:
         """

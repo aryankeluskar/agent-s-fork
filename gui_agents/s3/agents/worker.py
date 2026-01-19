@@ -8,6 +8,7 @@ import threading
 from gui_agents.s3.agents.grounding import ACI
 from gui_agents.s3.core.module import BaseModule
 from gui_agents.s3.memory.procedural_memory import PROCEDURAL_MEMORY
+from gui_agents.s3.memory.skill_integration import get_skill_memory
 from gui_agents.s3.utils.common_utils import (
     call_llm_safe,
     call_llm_formatted,
@@ -350,6 +351,32 @@ class Worker(BaseModule):
             prompt_with_instructions = self.generator_agent.system_prompt.replace(
                 "TASK_DESCRIPTION", instruction
             )
+            
+            # SKILL INTEGRATION: Enhance prompt with relevant learned skills and user context
+            skill_memory = get_skill_memory()
+            if skill_memory.has_skills():
+                try:
+                    # Add relevant skill context
+                    skill_context = skill_memory.get_skill_context_prompt(
+                        task_description=instruction,
+                        n_skills=3,
+                    )
+                    if skill_context:
+                        prompt_with_instructions += skill_context
+                        logger.info(
+                            "🎯 SKILL INTEGRATION: Enhanced prompt with relevant learned skills for task: %s",
+                            instruction[:100]
+                        )
+                    
+                    # Add user context (preferences, patterns learned from recordings)
+                    user_context = skill_memory.get_user_context_prompt()
+                    if user_context:
+                        prompt_with_instructions += user_context
+                        logger.info("👤 SKILL INTEGRATION: Added user context to prompt")
+                        
+                except Exception as e:
+                    logger.warning("⚠️  SKILL INTEGRATION: Failed to retrieve skills: %s", e)
+            
             self.generator_agent.add_system_prompt(prompt_with_instructions)
 
         # OPTIMIZATION: Run reflection and context preparation in parallel
