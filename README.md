@@ -1,174 +1,103 @@
 <h1 align="center">
-  <img src="images/agent_s.png" alt="Logo" style="vertical-align:middle" width="60"> Agent S:
-  <small>Use Computer Like a Human</small>
+  <img src="images/agent_s.png" alt="Logo" style="vertical-align:middle" width="60"> Turing
 </h1>
 
-<p align="center">&nbsp;
-  🌐 <a href="https://www.simular.ai/articles/agent-s3">[S3 blog]</a>&nbsp;
-  📄 <a href="https://arxiv.org/abs/2510.02250">[S3 Paper]</a>&nbsp;
-  🎥 <a href="https://www.youtube.com/watch?v=VHr0a3UBsh4">[S3 Video]</a>
-</p>
+<h3 align="center">
+  Your Desktop on Autopilot, Saves you Hundreds of Hours
+</h3>
 
-<p align="center">&nbsp;
-  🌐 <a href="https://www.simular.ai/articles/agent-s2-technical-review">[S2 blog]</a>&nbsp;
-  📄 <a href="https://arxiv.org/abs/2504.00906">[S2 Paper (COLM 2025)]</a>&nbsp;
-  🎥 <a href="https://www.youtube.com/watch?v=wUGVQl7c0eg">[S2 Video]</a>
-</p>
+## 💡 What's This About?
 
-<p align="center">&nbsp;
-  🌐 <a href="https://www.simular.ai/agent-s">[S1 blog]</a>&nbsp;
-  📄 <a href="https://arxiv.org/abs/2410.08164">[S1 Paper (ICLR 2025)]</a>&nbsp;
-  🎥 <a href="https://www.youtube.com/watch?v=OBDE3Knte0g">[S1 Video]</a>
-</p>
+Think about all the hours you've wasted on your computer. Not the fun stuff—the soul-crushing, repetitive tasks. Answering that same support ticket for the fiftieth time. Formatting spreadsheets. Clicking through the same sequence of menus you could do with your eyes closed.
 
-<p align="center">&nbsp;
-<a href="https://trendshift.io/repositories/13151" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13151" alt="simular-ai%2FAgent-S | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
-</p>
+Steve Jobs had this vision back in the 1980s. He said computers should be like bicycles for the mind—natural extensions of ourselves. And more than that, he imagined computers that could anticipate what you wanted to do next. They'd just... know.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/OS-Windows-blue?logo=windows&logoColor=white" alt="Windows">
-  <img src="https://img.shields.io/badge/OS-macOS-black?logo=apple&logoColor=white" alt="macOS">
-  <img src="https://img.shields.io/badge/OS-Linux-yellow?logo=linux&logoColor=black" alt="Linux">
-  <a href="https://discord.gg/E2XfsK9fPV">
-    <img src="https://dcbadge.limes.pink/api/server/https://discord.gg/E2XfsK9fPV?style=flat" alt="Discord">
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://pepy.tech/projects/gui-agents">
-    <img src="https://static.pepy.tech/badge/gui-agents" alt="PyPI Downloads">
-  </a>
-</p>
+Well, it's been over forty years, and we're still clicking and typing like it's 1984.
 
-<div align="center">
-  <!-- Keep these links. Translations will automatically update with the README. -->
-  <a href="https://www.readme-i18n.com/simular-ai/Agent-S?lang=de">Deutsch</a> | 
-  <a href="https://www.readme-i18n.com/simular-ai/Agent-S?lang=es">Español</a> | 
-  <a href="https://www.readme-i18n.com/simular-ai/Agent-S?lang=fr">français</a> | 
-  <a href="https://www.readme-i18n.com/simular-ai/Agent-S?lang=ja">日本語</a> | 
-  <a href="https://www.readme-i18n.com/simular-ai/Agent-S?lang=ko">한국어</a> | 
-  <a href="https://www.readme-i18n.com/simular-ai/Agent-S?lang=pt">Português</a> | 
-  <a href="https://www.readme-i18n.com/simular-ai/Agent-S?lang=ru">Русский</a> | 
-  <a href="https://www.readme-i18n.com/simular-ai/Agent-S?lang=zh">中文</a>
-</div>
+Turing changes that. Instead of you serving your computer, your computer learns how *you* work. It watches (only when you tell it to), learns your patterns, remembers your workflows, and then—here's the good part—it can actually do them for you. While you're out grabbing lunch with friends or finally getting to that book you've been meaning to read.
 
-<div align="center">
-  &nbsp;&nbsp;
-<p>Skip the setup? Try Agent S in <a href="https://cloud.simular.ai/">Simular Cloud</a>
-</div>
+And yeah, you can just talk to it. "Hey Jarvis, open Spotify and play my workout playlist." Done. No hands required.
 
-## 🥳 Updates
-- [x] **2025/10/02**: Released Agent S3 and its [technical paper](https://arxiv.org/abs/2510.02250), setting a new SOTA of **69.9%** on OSWorld (approaching 72% human performance), with strong generalizability on WindowsAgentArena and AndroidWorld! It is also simpler, faster, and more flexible.
-- [x] **2025/08/01**: Agent S2.5 is released (gui-agents v0.2.5): simpler, better, and faster! New SOTA on [OSWorld-Verified](https://os-world.github.io)!
-- [x] **2025/07/07**: The [Agent S2 paper](https://arxiv.org/abs/2504.00906) is accepted to COLM 2025! See you in Montreal!
-- [x] **2025/04/27**: The Agent S paper won the Best Paper Award 🏆 at ICLR 2025 Agentic AI for Science Workshop!
-- [x] **2025/04/01**: Released the [Agent S2 paper](https://arxiv.org/abs/2504.00906) with new SOTA results on OSWorld, WindowsAgentArena, and AndroidWorld!
-- [x] **2025/03/12**: Released Agent S2 along with v0.2.0 of [gui-agents](https://github.com/simular-ai/Agent-S), the new state-of-the-art for computer use agents (CUA), outperforming OpenAI's CUA/Operator and Anthropic's Claude 3.7 Sonnet Computer-Use!
-- [x] **2025/01/22**: The [Agent S paper](https://arxiv.org/abs/2410.08164) is accepted to ICLR 2025!
-- [x] **2025/01/21**: Released v0.1.2 of [gui-agents](https://github.com/simular-ai/Agent-S) library, with support for Linux and Windows!
-- [x] **2024/12/05**: Released v0.1.0 of [gui-agents](https://github.com/simular-ai/Agent-S) library, allowing you to use Agent-S for Mac, OSWorld, and WindowsAgentArena with ease!
-- [x] **2024/10/10**: Released the [Agent S paper](https://arxiv.org/abs/2410.08164) and codebase!
+## ✨ What It Does
 
-## Table of Contents
+Here's the thing. Most desktop automation tools are blind. They click at coordinates (543, 210) and hope that button's still there. Turing's different—it actually *sees* your screen, understands what's happening, and adapts when things move around.
 
-1. [💡 Introduction](#-introduction)
-2. [🎯 Current Results](#-current-results)
-3. [🛠️ Installation & Setup](#%EF%B8%8F-installation--setup) 
-4. [🚀 Usage](#-usage)
-5. [🤝 Acknowledgements](#-acknowledgements)
-6. [💬 Citation](#-citation)
+### 🎬 Recording & Learning
 
-## 💡 Introduction
+You can record any workflow you do regularly. Open your email client. Reply to a message. File it in a specific folder. Whatever your routine is.
 
-Welcome to **Agent S**, an open-source framework designed to enable autonomous interaction with computers through Agent-Computer Interface. Our mission is to build intelligent GUI agents that can learn from past experiences and perform complex tasks autonomously on your computer. 
+Turing records the video, captures every click and keystroke (timestamps and all), then sends it to a Vision Language Model that understands what you were trying to accomplish. Not just "clicked at x, y" but "clicked the Submit button to send the form." Semantic understanding, if you want to get technical about it.
 
-Whether you're interested in AI, automation, or contributing to cutting-edge agent-based systems, we're excited to have you here!
+These workflows get stored in a vector database—think of it like a library where similar tasks sit near each other. When you ask Turing to do something later, it searches for workflows that match and executes them. But smarter. It adapts to your screen, your apps, your way of doing things.
 
-## 🎯 Current Results
+### 🎤 Voice Control
 
-<p align="center">
-  <img src="images/s3_results.png" alt="Agent S3 Results" width="700"/>
-</p>
+Wake word detection means you can say "Hey Jarvis" and Turing starts listening. Then just tell it what you need. The transcription uses Wispr Flow for high-quality speech-to-text, and there's this neat transparent overlay that shows you what it heard. Live transcription as you speak, actually.
 
-On OSWorld, Agent S3 alone reaches 62.6% in the 100-step setting, already exceeding the previous state of the art of 61.4% (Claude Sonnet 4.5). With the addition of Behavior Best-of-N, performance climbs even higher to 69.9%, bringing computer-use agents to within just a few points of human-level accuracy (72%).
+Voice Activity Detection figures out when you've stopped talking. You don't need to press any buttons or say "stop recording" like some assistant from 2015. It just knows.
 
-Agent S3 also demonstrates strong zero-shot generalization. On WindowsAgentArena, accuracy rises from 50.2% using only Agent S3 to 56.6% by selecting from 3 rollouts. Similarly on AndroidWorld, performance improves from 68.1% to 71.6%
+### 🤖 Desktop Automation That Actually Works
 
-## 🛠️ Installation & Setup
+Under the hood, Turing uses Vision Language Models (Gemini 2.5 Flash, if you're curious) for screen understanding. It can see buttons, text fields, menus—all the UI elements you interact with. Then it uses specialized grounding models to translate that understanding into actual actions your computer can execute.
 
-### Prerequisites
-- **Single Monitor**: Our agent is designed for single monitor screens
-- **Security**: The agent runs Python code to control your computer - use with care
-- **Supported Platforms**: Linux, Mac, and Windows
+It's not just about clicking buttons, though. Turing can run code locally when that makes more sense. Data processing tasks, file manipulation, system automation—sometimes Python or Bash is faster and more reliable than simulating GUI interactions.
 
+## 🛠️ Getting Started
 
 ### Installation
-To install Agent S3 without cloning the repository, run
+
+Dead simple if you just want to use it:
+
 ```bash
 pip install gui-agents
 ```
-If you would like to test Agent S3 while making changes, clone the repository and install using
-```
+
+If you're the tinkering type and want to modify things:
+
+```bash
+git clone https://github.com/simular-ai/Agent-S.git
+cd Agent-S
 pip install -e .
 ```
 
-Don't forget to also `brew install tesseract`! Pytesseract requires this extra installation to work.
+One more thing—you need Tesseract for OCR:
 
-### API Configuration
-
-#### Option 1: Environment Variables
-Add to your `.bashrc` (Linux) or `.zshrc` (MacOS):
 ```bash
-export CEREBRAS_API_KEY=<YOUR_CEREBRAS_API_KEY>  # Recommended for fast inference
-export OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
-export ANTHROPIC_API_KEY=<YOUR_ANTHROPIC_API_KEY>
-export HF_TOKEN=<YOUR_HF_TOKEN>
+brew install tesseract  # macOS
+# or
+apt-get install tesseract-ocr  # Linux
+# or
+choco install tesseract  # Windows
 ```
 
-Get your Cerebras API key at: https://inference.cerebras.ai/
+### Configuration
 
-#### Option 2: Python Script
+You've got two options here. Either set environment variables (the clean way):
+
+```bash
+# Add these to your .bashrc or .zshrc
+export OPENROUTER_API_KEY=<your_key>
+export OPENAI_API_KEY=<your_key>
+export ANTHROPIC_API_KEY=<your_key>
+export WISPR_API_KEY=<your_key>  # for voice
+export ELEVENLABS_API_KEY=<your_key>  # for voice
+```
+
+Or do it in Python (the quick way):
+
 ```python
 import os
-os.environ["OPENAI_API_KEY"] = "<YOUR_API_KEY>"
+os.environ["OPENROUTER_API_KEY"] = "<your_key>"
 ```
 
-### Supported Models
-
-**⚠️ IMPORTANT: Agent-S is a GUI agent that requires VISION support to process screenshots!**
-
-**Vision-Capable Models** (for main model):
-- **OpenAI**: gpt-4o, gpt-4-turbo, gpt-5-nano-2025-08-07
-- **Anthropic**: claude-3-5-sonnet-20241022, claude-3-opus-20240229
-- **Google Gemini**: gemini-1.5-pro, gemini-1.5-flash
-
-**Text-Only Models** (for reflection model only):
-- **Cerebras**: qwen-3-32b, qwen-3-235b-a22b-instruct-2507, llama-3.3-70b (ultra-fast, cheap)
-
-See [models.md](models.md) for detailed configuration.
-
-### Grounding Models (Required)
-For optimal performance, we recommend [UI-TARS-1.5-7B](https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B) hosted on Hugging Face Inference Endpoints or another provider. See [Hugging Face Inference Endpoints](https://huggingface.co/learn/cookbook/en/enterprise_dedicated_endpoints) for setup instructions.
+Get your OpenRouter key at https://openrouter.ai/. They've got free models like Gemini 2.0 Flash if you want to try this without spending money. Perfect for testing.
 
 ## 🚀 Usage
 
+### Basic Desktop Automation
 
-> ⚡️ **Recommended Setup:**
-> Agent-S is a **GUI agent that requires vision** to process screenshots.
->
-> **Optimal Configuration:**
-> - **Main Model**: OpenAI `gpt-4o` (fast, vision-capable, reliable)
-> - **Reflection Model**: Cerebras `qwen-3-32b` (ultra-fast, text-only, cheap)
-> - **Grounding Model**: `UI-TARS-1.5-7B`
->
-> This gives you the best balance of speed, quality, and cost!
+The simplest way to run Turing is through the command line. This uses OpenAI's GPT-4o for vision (it needs to see your screen) and Cerebras for fast text-only reflection:
 
-
-### CLI
-
-Note, this is running Agent S3, our improved agent, without bBoN. 
-
-Run Agent S3 with the required parameters:
-
-**Recommended (OpenAI + Cerebras for optimal speed & cost):**
 ```bash
 agent_s \
     --provider openai \
@@ -182,31 +111,9 @@ agent_s \
     --grounding_height 1080
 ```
 
-This configuration uses:
-- **Main model**: `gpt-4o` on OpenAI (vision-capable, processes screenshots)
-- **Reflection model**: `qwen-3-32b` on Cerebras (ultra-fast, text-only, cheap)
-- **Grounding model**: `ui-tars-1.5-7b` for UI element detection
+Or if you want to use the free Gemini model through OpenRouter:
 
-> 💡 **Why this setup?** Agent-S needs vision to see your screen. Cerebras models are text-only, but perfect for fast reflection tasks!
-
-**Alternative (Anthropic):**
 ```bash
-agent_s \
-    --provider anthropic \
-    --model claude-3-5-sonnet-20241022 \
-    --ground_provider huggingface \
-    --ground_url http://localhost:8080 \
-    --ground_model ui-tars-1.5-7b \
-    --grounding_width 1920 \
-    --grounding_height 1080
-```
-
-**Alternative (OpenRouter - Free & Cost-Effective!):**
-```bash
-# Set your OpenRouter API key (get one at https://openrouter.ai/)
-export OPENROUTER_API_KEY="your-api-key-here"
-
-# Run with FREE Gemini 2.0 Flash model via OpenRouter
 agent_s \
     --provider open_router \
     --model google/gemini-2.0-flash-exp:free \
@@ -216,235 +123,293 @@ agent_s \
     --ground_model ui-tars-1.5-7b \
     --grounding_width 1920 \
     --grounding_height 1080
-
-# OR use paid Gemini 2.0 Flash for higher rate limits ($0.125/M input, $0.5/M output)
-agent_s \
-    --provider open_router \
-    --model google/gemini-2.0-flash-001 \
-    --model_url https://openrouter.ai/api/v1 \
-    --ground_provider huggingface \
-    --ground_url http://localhost:8080 \
-    --ground_model ui-tars-1.5-7b \
-    --grounding_width 1920 \
-    --grounding_height 1080
-
-# OR use GPT-4o via OpenRouter ($2.50/M input, $10/M output)
-agent_s \
-    --provider open_router \
-    --model openai/gpt-4o \
-    --model_url https://openrouter.ai/api/v1 \
-    --ground_provider huggingface \
-    --ground_url http://localhost:8080 \
-    --ground_model ui-tars-1.5-7b \
-    --grounding_width 1920 \
-    --grounding_height 1080
 ```
 
-> 💡 **Why OpenRouter?** Access 200+ AI models through one API, including FREE options like Gemini 2.0 Flash Experimental with 1M+ context window and full vision support!
+The grounding model is what translates "click the submit button" into actual coordinates. UI-TARS is pretty good at this. You'll need to host it somewhere—HuggingFace Inference Endpoints work well.
 
-> ⚠️ **Important**: The main model MUST support vision/multimodal inputs to process screenshots.
+### Recording Your Workflows
 
-#### Local Coding Environment (Optional)
-For tasks that require code execution (e.g., data processing, file manipulation, system automation), you can enable the local coding environment:
+This is where it gets interesting. You can teach Turing new skills by just showing it what to do.
+
+**Using the CLI (easiest):**
 
 ```bash
-agent_s \
-    --provider cerebras \
-    --model qwen-3-235b-a22b-instruct-2507 \
-    --ground_provider huggingface \
-    --ground_url http://localhost:8080 \
-    --ground_model ui-tars-1.5-7b \
-    --grounding_width 1920 \
-    --grounding_height 1080 \
-    --enable_local_env
+# Start recording - when you stop (Ctrl+C), it automatically analyzes and indexes the skill
+agent_s record start --name "reply_to_email"
+
+# List your recordings
+agent_s record list
+
+# Manually process a specific recording
+agent_s record process ~/Documents/AgentS_Recordings/my_recording/
 ```
 
-⚠️ **WARNING**: The local coding environment executes arbitrary Python and Bash code locally on your machine. Only use this feature in trusted environments and with trusted inputs.
+**Using the Python API:**
 
-#### Required Parameters
-- **`--provider`**: Main model provider - **MUST support vision** (e.g., openai, anthropic, gemini) - Default: "openai"
-- **`--model`**: Main model name - **MUST support vision** (e.g., gpt-4o, claude-3-5-sonnet-20241022) - Default: "gpt-4o"
-- **`--ground_provider`**: The provider for the grounding model - **Required**
-- **`--ground_url`**: The URL of the grounding model - **Required**
-- **`--ground_model`**: The model name for the grounding model - **Required**
-- **`--grounding_width`**: Width of the output coordinate resolution from the grounding model - **Required**
-- **`--grounding_height`**: Height of the output coordinate resolution from the grounding model - **Required**
+```python
+from gui_agents.s3.recording import Recorder
 
-#### Optional Parameters
-- **`--reflection_provider`**: Provider for reflection model - Default: "cerebras"
-- **`--reflection_model`**: Faster model for reflection (e.g., qwen-3-32b for Cerebras, gpt-4o-mini for OpenAI) - Default: "qwen-3-32b"
-- **`--model_temperature`**: The temperature to fix all model calls to (necessary to set to 1.0 for models like o3 but can be left blank for other models)
+# Create recorder (video mode by default)
+recorder = Recorder(recording_name="reply_to_email")
 
-#### Grounding Model Dimensions
-The grounding width and height should match the output coordinate resolution of your grounding model:
-- **UI-TARS-1.5-7B**: Use `--grounding_width 1920 --grounding_height 1080`
-- **UI-TARS-72B**: Use `--grounding_width 1000 --grounding_height 1000`
+# Start recording
+recorder.start()
 
-#### Optional Parameters
-- **`--model_url`**: Custom API URL for main generation model - Default: ""
-- **`--model_api_key`**: API key for main generation model - Default: ""
-- **`--ground_api_key`**: API key for grounding model endpoint - Default: ""
-- **`--max_trajectory_length`**: Maximum number of image turns to keep in trajectory - Default: 8
-- **`--enable_reflection`**: Enable reflection agent to assist the worker agent - Default: True
-- **`--enable_local_env`**: Enable local coding environment for code execution (WARNING: Executes arbitrary code locally) - Default: False
+# Do your workflow... Turing's watching
+# (Open email, read it, type reply, click send, whatever)
 
-#### Local Coding Environment Details
-The local coding environment enables Agent S3 to execute Python and Bash code directly on your machine. This is particularly useful for:
+# Stop when done
+recording_path = recorder.stop()
+print(f"Saved to: {recording_path}")
+```
 
-- **Data Processing**: Manipulating spreadsheets, CSV files, or databases
-- **File Operations**: Bulk file processing, content extraction, or file organization
-- **System Automation**: Configuration changes, system setup, or automation scripts
-- **Code Development**: Writing, editing, or executing code files
-- **Text Processing**: Document manipulation, content editing, or formatting
+After you stop recording, the post-processing pipeline kicks in. It converts your mouse/keyboard events to readable actions, sends the video to a VLM (Vision Language Model) for analysis, and creates a structured workflow that goes into the vector database.
 
-When enabled, the agent can use the `call_code_agent` action to execute code blocks for tasks that can be completed through programming rather than GUI interaction.
+Want to use screenshot mode instead of video? Lighter on disk space:
 
-**Requirements:**
-- **Python**: The same Python interpreter used to run Agent S3 (automatically detected)
-- **Bash**: Available at `/bin/bash` (standard on macOS and Linux)
-- **System Permissions**: The agent runs with the same permissions as the user executing it
+```bash
+agent_s record start --name "my_workflow" --mode screenshots
+```
 
-**Security Considerations:**
-- The local environment executes arbitrary code with the same permissions as the user running the agent
-- Only enable this feature in trusted environments
-- Be cautious when the agent generates code for system-level operations
-- Consider running in a sandboxed environment for untrusted tasks
-- Bash scripts are executed with a 30-second timeout to prevent hanging processes
+Or with Python:
 
-### `gui_agents` SDK
+```python
+recorder = Recorder(
+    recording_name="my_workflow",
+    mode="screenshots"  # captures on clicks, hotkeys, scroll stops
+)
+```
 
-First, we import the necessary modules. `AgentS3` is the main agent class for Agent S3. `OSWorldACI` is our grounding agent that translates agent actions into executable python code.
+Then process the recording (if you used `--no-process` or want to reprocess):
+
+```bash
+agent_s record process
+```
+
+Or with Python:
+
+```python
+from gui_agents.s3.recording.post_recording import process_recording
+
+results = process_recording(recording_path)
+
+if results["success"]:
+    print(f"Created skill: {results['skill_id']}")
+else:
+    print(f"Errors: {results['errors']}")
+```
+
+Now that workflow's in the database. Next time you ask Turing to do something similar, it'll find this workflow and execute it. Personalized automation without writing a single line of code.
+
+### Voice Control
+
+Run the voice assistant:
+
+```bash
+agent_s voice start
+```
+
+Say "Hey Jarvis" to activate. A transparent overlay appears—it shows what it hears in real-time. Just speak naturally. Tell it what you need.
+
+The voice system uses Wispr Flow for transcription (really high quality, understands context), wake word detection for the trigger. All the audio processing happens locally except the transcription part.
+
+You can list your audio devices if it's picking up the wrong microphone:
+
+```bash
+agent_s voice list-devices
+```
+
+Then specify which one to use:
+
+```bash
+agent_s voice start --device 2
+```
+
+### Using Turing in Your Code
+
+If you want more control, you can use Turing as a library:
+
 ```python
 import pyautogui
 import io
 from gui_agents.s3.agents.agent_s import AgentS3
 from gui_agents.s3.agents.grounding import OSWorldACI
-from gui_agents.s3.utils.local_env import LocalEnv  # Optional: for local coding environment
 
-# Load in your API keys.
-from dotenv import load_dotenv
-load_dotenv()
-
-current_platform = "linux"  # "darwin", "windows"
-```
-
-Next, we define our engine parameters. `engine_params` is used for the main agent, and `engine_params_for_grounding` is for grounding. For `engine_params_for_grounding`, we support custom endpoints like HuggingFace TGI, vLLM, and Open Router.
-
-```python
+# Configuration
 engine_params = {
-  "engine_type": provider,
-  "model": model,
-  "base_url": model_url,           # Optional
-  "api_key": model_api_key,        # Optional
-  "temperature": model_temperature # Optional
+    "engine_type": "openai",
+    "model": "gpt-4o"
 }
 
-# Load the grounding engine from a custom endpoint
-ground_provider = "<your_ground_provider>"
-ground_url = "<your_ground_url>"
-ground_model = "<your_ground_model>"
-ground_api_key = "<your_ground_api_key>"
-
-# Set grounding dimensions based on your model's output coordinate resolution
-# UI-TARS-1.5-7B: grounding_width=1920, grounding_height=1080
-# UI-TARS-72B: grounding_width=1000, grounding_height=1000
-grounding_width = 1920  # Width of output coordinate resolution
-grounding_height = 1080  # Height of output coordinate resolution
-
-engine_params_for_grounding = {
-  "engine_type": ground_provider,
-  "model": ground_model,
-  "base_url": ground_url,
-  "api_key": ground_api_key,  # Optional
-  "grounding_width": grounding_width,
-  "grounding_height": grounding_height,
+grounding_engine_params = {
+    "engine_type": "huggingface",
+    "model": "ui-tars-1.5-7b",
+    "base_url": "http://localhost:8080",
+    "grounding_width": 1920,
+    "grounding_height": 1080
 }
-```
 
-Then, we define our grounding agent and Agent S3.
-
-```python
-# Optional: Enable local coding environment
-enable_local_env = False  # Set to True to enable local code execution
-local_env = LocalEnv() if enable_local_env else None
-
+# Create the grounding agent
 grounding_agent = OSWorldACI(
-    env=local_env,  # Pass local_env for code execution capability
-    platform=current_platform,
+    platform="darwin",  # or "windows" or "linux"
     engine_params_for_generation=engine_params,
-    engine_params_for_grounding=engine_params_for_grounding,
-    width=1920,  # Optional: screen width
-    height=1080  # Optional: screen height
+    engine_params_for_grounding=grounding_engine_params
 )
 
+# Create the main agent
 agent = AgentS3(
     engine_params,
     grounding_agent,
-    platform=current_platform,
-    max_trajectory_length=8,  # Optional: maximum image turns to keep
-    enable_reflection=True     # Optional: enable reflection agent
+    platform="darwin",
+    max_trajectory_length=8,
+    enable_reflection=True
 )
-```
 
-Finally, let's query the agent!
-
-```python
-# Get screenshot.
+# Take a screenshot
 screenshot = pyautogui.screenshot()
-buffered = io.BytesIO() 
+buffered = io.BytesIO()
 screenshot.save(buffered, format="PNG")
 screenshot_bytes = buffered.getvalue()
 
-obs = {
-  "screenshot": screenshot_bytes,
-}
+# Ask Turing to do something
+instruction = "Open Chrome and navigate to GitHub"
+info, action = agent.predict(
+    instruction=instruction,
+    observation={"screenshot": screenshot_bytes}
+)
 
-instruction = "Close VS Code"
-info, action = agent.predict(instruction=instruction, observation=obs)
-
+# Execute the action
 exec(action[0])
 ```
 
-Refer to `gui_agents/s3/cli_app.py` for more details on how the inference loop works.
+Pretty straightforward. Take a screenshot, ask Turing what to do, execute the code it generates.
 
-### OSWorld
+### Searching Your Recorded Workflows
 
-To deploy Agent S3 in OSWorld, follow the [OSWorld Deployment instructions](osworld_setup/s3/OSWorld.md).
+Once you've recorded some workflows, you can search through them:
 
-## 💬 Citations
+**Using the CLI:**
 
-If you find this codebase useful, please cite:
+```bash
+# Search for skills
+agent_s skills search "resize images"
 
-```
-@misc{Agent-S3,
-      title={The Unreasonable Effectiveness of Scaling Agents for Computer Use}, 
-      author={Gonzalo Gonzalez-Pumariega and Vincent Tu and Chih-Lun Lee and Jiachen Yang and Ang Li and Xin Eric Wang},
-      year={2025},
-      eprint={2510.02250},
-      archivePrefix={arXiv},
-      primaryClass={cs.AI},
-      url={https://arxiv.org/abs/2510.02250}, 
-}
+# List all indexed skills
+agent_s skills list
 
-@misc{Agent-S2,
-      title={Agent S2: A Compositional Generalist-Specialist Framework for Computer Use Agents}, 
-      author={Saaket Agashe and Kyle Wong and Vincent Tu and Jiachen Yang and Ang Li and Xin Eric Wang},
-      year={2025},
-      eprint={2504.00906},
-      archivePrefix={arXiv},
-      primaryClass={cs.AI},
-      url={https://arxiv.org/abs/2504.00906}, 
-}
-
-@inproceedings{Agent-S,
-    title={{Agent S: An Open Agentic Framework that Uses Computers Like a Human}},
-    author={Saaket Agashe and Jiuzhou Han and Shuyu Gan and Jiachen Yang and Ang Li and Xin Eric Wang},
-    booktitle={International Conference on Learning Representations (ICLR)},
-    year={2025},
-    url={https://arxiv.org/abs/2410.08164}
-}
+# Generate a plan from your skills
+agent_s skills compose "download an image and resize it to 800x600"
 ```
 
-## Star History
+**Using the Python API:**
 
-[![Star History Chart](https://api.star-history.com/svg?repos=simular-ai/Agent-S&type=Date)](https://star-history.com/#simular-ai/Agent-S&Date)
+```python
+from gui_agents.s3.skills import SkillStore, SkillRetriever
+
+# Load the skill store
+store = SkillStore()
+retriever = SkillRetriever(store)
+
+# Search for workflows
+results = retriever.retrieve(
+    query="how do I resize images in GIMP",
+    n_results=3
+)
+
+for result in results:
+    print(f"{result.skill.name} (score: {result.score:.2f})")
+    print(f"  {result.skill.summary}")
+```
+
+The search combines semantic similarity (understanding what you mean) with keyword matching (finding exact terms). So whether you search for "resize photo" or "make image smaller," it'll find the right workflow.
+
+## 🔧 Advanced Features
+
+### Local Coding Environment
+
+Sometimes GUI automation is the wrong tool. If you need to process 1000 CSV files or refactor code, Turing can drop into a local coding environment:
+
+```bash
+agent_s \
+    --provider openai \
+    --model gpt-4o \
+    --ground_provider huggingface \
+    --ground_url http://localhost:8080 \
+    --ground_model ui-tars-1.5-7b \
+    --grounding_width 1920 \
+    --grounding_height 1080 \
+    --enable_local_env  # This enables code execution
+```
+
+Now when you ask Turing to manipulate data or work with files, it can write and execute Python or Bash scripts directly. Way faster than clicking through a GUI, and honestly more reliable for these kinds of tasks.
+
+Just remember—this executes arbitrary code with your user permissions. Only enable it if you understand what that means.
+
+### Workflow Chaining
+
+The really cool thing about storing workflows semantically is you can chain them together. Turing understands preconditions and postconditions.
+
+For example, if you have:
+1. A workflow that downloads a file (postcondition: "file downloaded")
+2. A workflow that processes CSV files (precondition: "CSV file exists")
+
+Turing can automatically chain them. "Download this CSV and process it" becomes two workflows executed in sequence.
+
+```python
+from gui_agents.s3.skills import SkillStore
+
+store = SkillStore()
+
+# Find a workflow
+skill = store.get_skill("download_csv_workflow")
+
+# Find what can come after
+chainable = store.find_chainable_skills(skill)
+
+for next_skill in chainable:
+    print(f"Can chain: {next_skill.name}")
+```
+
+We're working on making this more automatic. Eventually you should be able to describe a complex multi-step goal and Turing will figure out the workflow chain itself.
+
+## 🎯 What Makes This Different
+
+Look, there are a lot of automation tools out there. Most of them are either:
+- Brittle (breaks when your screen resolution changes)
+- Blind (no understanding of what's actually on screen)
+- Manual (you have to program every single step)
+
+Turing combines vision, learning, and adaptability. It sees what you see. It learns what you do. And it adapts when things change.
+
+The recording feature means you don't need to be a programmer. Show it once, and it figures out the pattern. The voice control means you don't even need to type. And the semantic storage means asking for "email reports" will find your "send weekly analytics email" workflow even though you didn't use those exact words.
+
+It's closer to having a really observant assistant who pays attention and remembers things. Which, let's be honest, is what we've wanted computers to be for decades.
+
+## 🐛 Known Issues
+
+Real talk—this is complex software. Here are some things to know:
+
+- Multi-monitor setups aren't fully supported yet. Use your primary monitor.
+- Grounding models sometimes struggle with very cluttered interfaces. Clean UIs work better.
+- Voice wake word detection can be finicky depending on your microphone. Try the device selection if it's not working.
+- Recording very long workflows (30+ minutes) can create large video files. Consider using screenshot mode.
+- The first time you record and analyze a workflow, it takes a minute. Be patient. VLMs are doing a lot of work.
+
+Found a bug? Open an issue on GitHub or hit us up in Discord.
+
+## 🤝 Contributing
+
+We'd love help making Turing better. A few areas where we need expertise:
+
+- Pre-recorded workflows for common software (give everyone a head start)
+- Better grounding models (UI element detection is hard)
+- Cloud execution (run workflows on your computer from your phone)
+- Workflow composition UI (visual way to chain workflows)
+
+Check out the issues on GitHub. Or just fork it and build something cool.
+
+---
+
+<div align="center">
+Built with the belief that computers should work for us, not the other way around.
+</div>

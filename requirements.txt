@@ -16,8 +16,22 @@ toml
 black
 pytesseract
 google-genai
+python-dotenv
+
+# Recording dependencies
+pynput>=1.7.6
+mss>=9.0.0
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
+# Voice assistant dependencies
+openwakeword>=0.6.0
+pyaudio>=0.2.13
+PyQt5>=5.15.0
+PyQtWebEngine>=5.15.0
 
 # Platform-specific dependencies
 pyobjc; platform_system == "Darwin"
+pyobjc-framework-Cocoa>=10.0; platform_system == "Darwin"
 pywinauto; platform_system == "Windows"
-pywin32; platform_system == "Windows" 
+pywin32; platform_system == "Windows"
